@@ -5,30 +5,44 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ClipStack"
         mc:Ignorable="d"
-        Title="ClipStack" Height="450" Width="380"
-        WindowStartupLocation="CenterScreen">
-    <Grid Margin="8">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+        Title="ClipStack"
+        Width="380" Height="420"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        Topmost="True"
+        WindowStartupLocation="Manual"
+        Deactivated="OnDeactivated">
 
-        <TextBlock Grid.Row="0"
-                   Text="Clipboard history"
-                   FontSize="14" FontWeight="SemiBold"
-                   Margin="4,4,4,8" />
+    <!-- Thin border so the borderless popup still reads as a distinct surface. -->
+    <Border BorderBrush="#FF3C3C3C" BorderThickness="1" Background="White">
+        <Grid Margin="8">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-        <!-- Bound to ClipboardHistory.Items; each row shows the one-line preview. -->
-        <ListBox Grid.Row="1"
-                 ItemsSource="{Binding}"
-                 HorizontalContentAlignment="Stretch">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Preview}"
-                               TextTrimming="CharacterEllipsis"
-                               Padding="2" />
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-    </Grid>
+            <TextBox x:Name="SearchBox" Grid.Row="0"
+                     Margin="0,0,0,8" Padding="4"
+                     KeyDown="OnSearchKeyDown"
+                     TextChanged="OnSearchTextChanged" />
+
+            <ListBox x:Name="HistoryList" Grid.Row="1"
+                     HorizontalContentAlignment="Stretch"
+                     MouseDoubleClick="OnListDoubleClick">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Preview}"
+                                   TextTrimming="CharacterEllipsis"
+                                   Padding="2" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <TextBlock Grid.Row="2" Margin="2,8,2,0"
+                       FontSize="11" Foreground="#FF808080"
+                       Text="↑↓ select · Enter paste · Esc close" />
+        </Grid>
+    </Border>
 </Window>

@@ -1,9 +1,11 @@
 using System.Windows;
+using ClipStack.Models;
 using ClipStack.Services;
 
-// Enabling WinForms (for the tray icon) pulls System.Windows.Forms.Application
-// into scope too, so spell out that "Application" here means the WPF one.
+// Enabling WinForms (for the tray icon) pulls the System.Windows.Forms versions
+// of these types into scope too, so spell out that we mean the WPF ones.
 using Application = System.Windows.Application;
+using Clipboard = System.Windows.Clipboard;
 
 namespace ClipStack;
 
@@ -11,14 +13,22 @@ namespace ClipStack;
 /// Application entry point. Wires together the long-lived pieces of ClipStack
 /// and runs it as a tray application: there is no window on startup, the app
 /// lives in the system tray, and it only exits when the user chooses "Quit".
+///
+/// The core flow: press Ctrl+Shift+V → the popup appears over the current app →
+/// pick a clip → it is pasted straight back into that app.
 /// </summary>
 public partial class App : Application
 {
     private Mutex? _singleInstanceMutex;
     private ClipboardHistory _history = null!;
     private ClipboardMonitor _monitor = null!;
+    private HotkeyService _hotkey = null!;
     private TrayIcon _tray = null!;
     private MainWindow _window = null!;
+
+    // The window that was focused when the popup was summoned, so a chosen clip
+    // can be pasted back into it. IntPtr.Zero means "don't paste, just copy".
+    private IntPtr _pasteTarget;
 
     protected override void OnStartup(StartupEventArgs e)
     {
@@ -44,29 +54,54 @@ public partial class App : Application
         _monitor = new ClipboardMonitor();
         _monitor.TextCaptured += _history.Add;
 
-        // The window is created once and reused; closing it just hides it back
-        // into the tray (see MainWindow.OnClosing).
+        // The popup is created once and reused; it hides instead of closing.
         _window = new MainWindow(_history);
+        _window.EntryChosen += OnEntryChosen;
+
+        // Ctrl+Shift+V summons the popup over whatever app the user is in.
+        _hotkey = new HotkeyService();
+        _hotkey.Pressed += ShowPopupForPaste;
 
         _tray = new TrayIcon();
-        _tray.OpenRequested += ShowWindow;
+        _tray.OpenRequested += ShowPopupForBrowsing;
         _tray.QuitRequested += Shutdown;
     }
 
-    /// <summary>Brings the history window to the foreground, restoring it if hidden.</summary>
-    private void ShowWindow()
+    /// <summary>Hotkey flow: remember the active app so we can paste back into it.</summary>
+    private void ShowPopupForPaste()
     {
-        _window.Show();
+        _pasteTarget = ForegroundPaste.CaptureForegroundWindow();
+        _window.ShowAsPopup();
+    }
 
-        if (_window.WindowState == WindowState.Minimized)
-            _window.WindowState = WindowState.Normal;
+    /// <summary>
+    /// Tray flow: just browse the history. There is no meaningful app to paste
+    /// into, so a chosen clip is only copied to the clipboard.
+    /// </summary>
+    private void ShowPopupForBrowsing()
+    {
+        _pasteTarget = IntPtr.Zero;
+        _window.ShowAsPopup();
+    }
 
-        _window.Activate();
+    private void OnEntryChosen(ClipboardEntry entry)
+    {
+        _window.Hide();
+
+        // Put the chosen text on the clipboard so it is ready to paste anywhere.
+        Clipboard.SetText(entry.Text);
+
+        // Paste it back into the originating app once the popup has gone away,
+        // so focus has already returned before we send the keystroke.
+        var target = _pasteTarget;
+        Dispatcher.BeginInvoke(() => ForegroundPaste.PasteInto(target),
+            System.Windows.Threading.DispatcherPriority.Background);
     }
 
     protected override void OnExit(ExitEventArgs e)
     {
         _tray?.Dispose();
+        _hotkey?.Dispose();
         _monitor?.Dispose();
         _singleInstanceMutex?.Dispose();
         base.OnExit(e);
