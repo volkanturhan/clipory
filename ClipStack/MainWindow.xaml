@@ -1,12 +1,34 @@
-﻿<Window x:Class="ClipStack.MainWindow"
+<Window x:Class="ClipStack.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ClipStack"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="ClipStack" Height="450" Width="380"
+        WindowStartupLocation="CenterScreen">
+    <Grid Margin="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
+        <TextBlock Grid.Row="0"
+                   Text="Clipboard history"
+                   FontSize="14" FontWeight="SemiBold"
+                   Margin="4,4,4,8" />
+
+        <!-- Bound to ClipboardHistory.Items; each row shows the one-line preview. -->
+        <ListBox Grid.Row="1"
+                 ItemsSource="{Binding}"
+                 HorizontalContentAlignment="Stretch">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Preview}"
+                               TextTrimming="CharacterEllipsis"
+                               Padding="2" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </Grid>
 </Window>
