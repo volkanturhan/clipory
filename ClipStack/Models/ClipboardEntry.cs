@@ -1,3 +1,6 @@
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+
 namespace ClipStack.Models;
 
 /// <summary>
@@ -5,12 +8,15 @@ namespace ClipStack.Models;
 /// For now ClipStack only tracks text; richer formats (images, files) can be
 /// added later without changing how the history store works.
 /// </summary>
-public sealed class ClipboardEntry
+public sealed class ClipboardEntry : INotifyPropertyChanged
 {
-    public ClipboardEntry(string text, DateTime copiedAt)
+    private bool _isPinned;
+
+    public ClipboardEntry(string text, DateTime copiedAt, bool isPinned = false)
     {
         Text = text;
         CopiedAt = copiedAt;
+        _isPinned = isPinned;
     }
 
     /// <summary>The full text that was copied.</summary>
@@ -18,6 +24,23 @@ public sealed class ClipboardEntry
 
     /// <summary>When this item was captured.</summary>
     public DateTime CopiedAt { get; }
+
+    /// <summary>
+    /// Whether the user has pinned this clip. Pinned clips stay at the top of
+    /// the history and are never dropped when the list fills up.
+    /// </summary>
+    public bool IsPinned
+    {
+        get => _isPinned;
+        set
+        {
+            if (_isPinned == value)
+                return;
+
+            _isPinned = value;
+            OnPropertyChanged();
+        }
+    }
 
     /// <summary>
     /// A short, single-line version of <see cref="Text"/> for showing in the
@@ -39,4 +62,9 @@ public sealed class ClipboardEntry
                 : collapsed[..maxLength] + "…";
         }
     }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 }

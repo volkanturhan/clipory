@@ -22,6 +22,7 @@ namespace ClipStack;
 /// </summary>
 public partial class MainWindow : Window
 {
+    private readonly ClipboardHistory _history;
     private readonly ICollectionView _view;
     private string _searchText = string.Empty;
 
@@ -36,6 +37,8 @@ public partial class MainWindow : Window
     public MainWindow(ClipboardHistory history)
     {
         InitializeComponent();
+
+        _history = history;
 
         // A collection view lets us filter the live history by the search text
         // without touching the underlying store.
@@ -87,6 +90,14 @@ public partial class MainWindow : Window
 
     private void OnSearchKeyDown(object sender, KeyEventArgs e)
     {
+        // Ctrl+P pins or unpins the selected clip.
+        if (e.Key == Key.P && Keyboard.Modifiers == ModifierKeys.Control)
+        {
+            PinSelected();
+            e.Handled = true;
+            return;
+        }
+
         switch (e.Key)
         {
             // Let the arrow keys drive the list while the caret stays in the box.
@@ -102,6 +113,10 @@ public partial class MainWindow : Window
                 ChooseSelected();
                 e.Handled = true;
                 break;
+            case Key.Delete:
+                DeleteSelected();
+                e.Handled = true;
+                break;
             case Key.Escape:
                 Hide();
                 e.Handled = true;
@@ -110,6 +125,39 @@ public partial class MainWindow : Window
     }
 
     private void OnListDoubleClick(object sender, MouseButtonEventArgs e) => ChooseSelected();
+
+    // Context-menu actions. The menu inherits the row's data context, so the
+    // sender's DataContext is the entry that was right-clicked.
+    private void OnPinClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is FrameworkElement { DataContext: ClipboardEntry entry })
+            _history.TogglePin(entry);
+    }
+
+    private void OnDeleteClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is FrameworkElement { DataContext: ClipboardEntry entry })
+            _history.Remove(entry);
+    }
+
+    private void PinSelected()
+    {
+        if (HistoryList.SelectedItem is ClipboardEntry entry)
+            _history.TogglePin(entry);
+    }
+
+    private void DeleteSelected()
+    {
+        if (HistoryList.SelectedItem is not ClipboardEntry entry)
+            return;
+
+        var index = HistoryList.SelectedIndex;
+        _history.Remove(entry);
+
+        // Keep a sensible item selected after the removal.
+        if (HistoryList.Items.Count > 0)
+            HistoryList.SelectedIndex = Math.Min(index, HistoryList.Items.Count - 1);
+    }
 
     // Clicking outside the popup dismisses it, the way a launcher menu would —
     // but not during the show sequence, which can briefly deactivate us.

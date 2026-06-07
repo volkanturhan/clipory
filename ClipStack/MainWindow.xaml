@@ -18,6 +18,8 @@
         Deactivated="OnDeactivated">
 
     <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+
         <!-- Brand + neutral palette, shared across the popup. -->
         <SolidColorBrush x:Key="Accent" Color="#4F46E5" />
         <SolidColorBrush x:Key="Surface" Color="#FFFFFF" />
@@ -140,8 +142,28 @@
                          MouseDoubleClick="OnListDoubleClick">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Preview}"
-                                       TextTrimming="CharacterEllipsis" />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="{Binding Preview}"
+                                           TextTrimming="CharacterEllipsis"
+                                           VerticalAlignment="Center" />
+
+                                <!-- Amber star marks pinned clips. -->
+                                <TextBlock Grid.Column="1" Text="★" Margin="8,0,0,0"
+                                           VerticalAlignment="Center" Foreground="#F59E0B"
+                                           Visibility="{Binding IsPinned, Converter={StaticResource BoolToVis}}" />
+
+                                <Grid.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="Pin / Unpin" Click="OnPinClick" />
+                                        <MenuItem Header="Delete" Click="OnDeleteClick" />
+                                    </ContextMenu>
+                                </Grid.ContextMenu>
+                            </Grid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
@@ -165,7 +187,7 @@
             <!-- Keyboard hint. -->
             <TextBlock Grid.Row="3" Margin="2,10,2,0"
                        FontSize="11" Foreground="{StaticResource TextMuted}"
-                       Text="↑↓ select · Enter paste · Esc close" />
+                       Text="↑↓ select · Enter paste · Del remove · right-click to pin · Esc close" />
         </Grid>
     </Border>
 </Window>
