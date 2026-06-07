@@ -20,6 +20,9 @@ public sealed class TrayIcon : IDisposable
     /// <summary>Raised when the user asks to open the history window.</summary>
     public event Action? OpenRequested;
 
+    /// <summary>Raised when the user asks to clear the (unpinned) history.</summary>
+    public event Action? ClearHistoryRequested;
+
     /// <summary>Raised when the user asks to quit the application.</summary>
     public event Action? QuitRequested;
 
@@ -27,6 +30,7 @@ public sealed class TrayIcon : IDisposable
     {
         var menu = new ContextMenuStrip();
         menu.Items.Add("Open ClipStack", null, (_, _) => OpenRequested?.Invoke());
+        menu.Items.Add("Clear history", null, (_, _) => ClearHistoryRequested?.Invoke());
         menu.Items.Add(new ToolStripSeparator());
         menu.Items.Add("Quit", null, (_, _) => QuitRequested?.Invoke());
 

@@ -20,6 +20,7 @@ namespace ClipStack;
 public partial class App : Application
 {
     private Mutex? _singleInstanceMutex;
+    private HistoryStorage _storage = null!;
     private ClipboardHistory _history = null!;
     private ClipboardMonitor _monitor = null!;
     private HotkeyService _hotkey = null!;
@@ -48,7 +49,11 @@ public partial class App : Application
         // shutdown is driven explicitly from the tray's Quit command.
         ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
+        // Restore the saved history, then keep persisting it as it changes.
+        _storage = new HistoryStorage();
         _history = new ClipboardHistory();
+        _history.Initialize(_storage.Load());
+        _history.Changed += () => _storage.Save(_history.Items);
 
         // Every captured clip flows into the history store.
         _monitor = new ClipboardMonitor();
@@ -64,6 +69,7 @@ public partial class App : Application
 
         _tray = new TrayIcon();
         _tray.OpenRequested += ShowPopupForBrowsing;
+        _tray.ClearHistoryRequested += _history.ClearUnpinned;
         _tray.QuitRequested += Shutdown;
     }
 
