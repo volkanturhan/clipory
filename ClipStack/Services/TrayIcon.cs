@@ -15,6 +15,7 @@ namespace ClipStack.Services;
 public sealed class TrayIcon : IDisposable
 {
     private readonly NotifyIcon _notifyIcon;
+    private readonly Icon? _icon;
 
     /// <summary>Raised when the user asks to open the history window.</summary>
     public event Action? OpenRequested;
@@ -29,10 +30,13 @@ public sealed class TrayIcon : IDisposable
         menu.Items.Add(new ToolStripSeparator());
         menu.Items.Add("Quit", null, (_, _) => QuitRequested?.Invoke());
 
+        _icon = TryLoadAppIcon();
+
         _notifyIcon = new NotifyIcon
         {
-            // TODO: replace with a branded ClipStack icon in a later polish step.
-            Icon = SystemIcons.Application,
+            // Fall back to a generic icon if ours fails to load — never crash
+            // the whole app over a tray icon.
+            Icon = _icon ?? SystemIcons.Application,
             Text = "ClipStack",
             Visible = true,
             ContextMenuStrip = menu,
@@ -41,11 +45,30 @@ public sealed class TrayIcon : IDisposable
         _notifyIcon.DoubleClick += (_, _) => OpenRequested?.Invoke();
     }
 
+    /// <summary>
+    /// Loads the bundled ClipStack icon at the system's small-icon size so the
+    /// tray gets a crisp frame. Returns null on any failure.
+    /// </summary>
+    private static Icon? TryLoadAppIcon()
+    {
+        try
+        {
+            var uri = new Uri("pack://application:,,,/Assets/ClipStack.ico");
+            using var stream = System.Windows.Application.GetResourceStream(uri).Stream;
+            return new Icon(stream, SystemInformation.SmallIconSize);
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
     public void Dispose()
     {
         // Hide before disposing so the icon disappears immediately instead of
         // lingering in the tray until the user hovers over it.
         _notifyIcon.Visible = false;
         _notifyIcon.Dispose();
+        _icon?.Dispose();
     }
 }
