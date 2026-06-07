@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <!-- Product / assembly metadata. Kept in one place so the published exe
+       carries proper details in its file properties. -->
+  <PropertyGroup>
+    <Product>ClipStack</Product>
+    <AssemblyTitle>ClipStack</AssemblyTitle>
+    <Description>A lightweight Windows clipboard history manager.</Description>
+    <Authors>Volkan Turhan</Authors>
+    <Version>0.1.0</Version>
+    <NeutralLanguage>en</NeutralLanguage>
+  </PropertyGroup>
+
+</Project>
