@@ -31,6 +31,7 @@ public sealed class TrayIcon : IDisposable
         var menu = new ContextMenuStrip();
         menu.Items.Add("Open ClipStack", null, (_, _) => OpenRequested?.Invoke());
         menu.Items.Add("Clear history", null, (_, _) => ClearHistoryRequested?.Invoke());
+        menu.Items.Add(BuildAutoStartItem());
         menu.Items.Add(new ToolStripSeparator());
         menu.Items.Add("Quit", null, (_, _) => QuitRequested?.Invoke());
 
@@ -47,6 +48,19 @@ public sealed class TrayIcon : IDisposable
         };
 
         _notifyIcon.DoubleClick += (_, _) => OpenRequested?.Invoke();
+    }
+
+    // A checkable "Start with Windows" item that reflects and toggles the
+    // current autostart registration.
+    private static ToolStripMenuItem BuildAutoStartItem()
+    {
+        var item = new ToolStripMenuItem("Start with Windows")
+        {
+            CheckOnClick = true,
+            Checked = AutoStart.IsEnabled(),
+        };
+        item.CheckedChanged += (_, _) => AutoStart.SetEnabled(item.Checked);
+        return item;
     }
 
     /// <summary>
