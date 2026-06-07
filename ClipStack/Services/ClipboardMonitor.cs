@@ -3,6 +3,10 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
 
+// With WinForms enabled (for the tray icon) "Clipboard" is ambiguous; we want
+// the WPF clipboard API here.
+using Clipboard = System.Windows.Clipboard;
+
 namespace ClipStack.Services;
 
 /// <summary>

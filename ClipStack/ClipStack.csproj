@@ -6,6 +6,9 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <!-- Enabled solely for the WinForms NotifyIcon (system tray); it ships with
+         the .NET SDK, so the app stays free of third-party dependencies. -->
+    <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
 
   <!-- Product / assembly metadata. Kept in one place so the published exe
