@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ClipStack"
+        xmlns:services="clr-namespace:ClipStack.Services"
         mc:Ignorable="d"
         Title="ClipStack"
         Width="380" Height="460"
@@ -116,7 +117,8 @@
                          Style="{StaticResource SearchBoxStyle}"
                          KeyDown="OnSearchKeyDown"
                          TextChanged="OnSearchTextChanged" />
-                <TextBlock Text="Search clips…" IsHitTestVisible="False"
+                <TextBlock Text="{Binding [SearchPlaceholder], Source={x:Static services:Localization.Instance}}"
+                           IsHitTestVisible="False"
                            Margin="12,0,0,0" VerticalAlignment="Center"
                            FontSize="13" Foreground="{StaticResource TextMuted}">
                     <TextBlock.Style>
@@ -159,8 +161,10 @@
 
                                 <Grid.ContextMenu>
                                     <ContextMenu>
-                                        <MenuItem Header="Pin / Unpin" Click="OnPinClick" />
-                                        <MenuItem Header="Delete" Click="OnDeleteClick" />
+                                        <MenuItem Header="{Binding [MenuPin], Source={x:Static services:Localization.Instance}}"
+                                                  Click="OnPinClick" />
+                                        <MenuItem Header="{Binding [MenuDelete], Source={x:Static services:Localization.Instance}}"
+                                                  Click="OnDeleteClick" />
                                     </ContextMenu>
                                 </Grid.ContextMenu>
                             </Grid>
@@ -168,7 +172,7 @@
                     </ListBox.ItemTemplate>
                 </ListBox>
 
-                <TextBlock Text="No clips to show"
+                <TextBlock Text="{Binding [EmptyState], Source={x:Static services:Localization.Instance}}"
                            HorizontalAlignment="Center" VerticalAlignment="Center"
                            FontSize="12" Foreground="{StaticResource TextMuted}">
                     <TextBlock.Style>
@@ -187,7 +191,8 @@
             <!-- Keyboard hint. -->
             <TextBlock Grid.Row="3" Margin="2,10,2,0"
                        FontSize="11" Foreground="{StaticResource TextMuted}"
-                       Text="↑↓ select · Enter paste · Del remove · right-click to pin · Esc close" />
+                       TextWrapping="Wrap"
+                       Text="{Binding [Hint], Source={x:Static services:Localization.Instance}}" />
         </Grid>
     </Border>
 </Window>

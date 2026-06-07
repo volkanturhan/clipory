@@ -6,6 +6,7 @@ using ClipStack.Services;
 // of these types into scope too, so spell out that we mean the WPF ones.
 using Application = System.Windows.Application;
 using Clipboard = System.Windows.Clipboard;
+using Localization = ClipStack.Services.Localization;
 
 namespace ClipStack;
 
@@ -20,12 +21,14 @@ namespace ClipStack;
 public partial class App : Application
 {
     private Mutex? _singleInstanceMutex;
+    private SettingsStore _settings = null!;
     private HistoryStorage _storage = null!;
     private ClipboardHistory _history = null!;
     private ClipboardMonitor _monitor = null!;
     private HotkeyService _hotkey = null!;
     private TrayIcon _tray = null!;
     private MainWindow _window = null!;
+    private AboutWindow? _aboutWindow;
 
     // The window that was focused when the popup was summoned, so a chosen clip
     // can be pasted back into it. IntPtr.Zero means "don't paste, just copy".
@@ -49,6 +52,12 @@ public partial class App : Application
         // shutdown is driven explicitly from the tray's Quit command.
         ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
+        // Apply the saved language before any UI is built, then persist changes.
+        _settings = new SettingsStore();
+        Localization.Instance.Language = _settings.LoadLanguage();
+        Localization.Instance.LanguageChanged +=
+            () => _settings.SaveLanguage(Localization.Instance.Language);
+
         // Restore the saved history, then keep persisting it as it changes.
         _storage = new HistoryStorage();
         _history = new ClipboardHistory();
@@ -70,7 +79,22 @@ public partial class App : Application
         _tray = new TrayIcon();
         _tray.OpenRequested += ShowPopupForBrowsing;
         _tray.ClearHistoryRequested += _history.ClearUnpinned;
+        _tray.AboutRequested += ShowAbout;
         _tray.QuitRequested += Shutdown;
+    }
+
+    /// <summary>Shows the About window, reusing it if already open.</summary>
+    private void ShowAbout()
+    {
+        if (_aboutWindow is not null)
+        {
+            _aboutWindow.Activate();
+            return;
+        }
+
+        _aboutWindow = new AboutWindow();
+        _aboutWindow.Closed += (_, _) => _aboutWindow = null;
+        _aboutWindow.Show();
     }
 
     /// <summary>Hotkey flow: remember the active app so we can paste back into it.</summary>
