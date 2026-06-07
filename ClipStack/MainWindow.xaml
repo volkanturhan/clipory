@@ -6,42 +6,165 @@
         xmlns:local="clr-namespace:ClipStack"
         mc:Ignorable="d"
         Title="ClipStack"
-        Width="380" Height="420"
+        Width="380" Height="460"
         WindowStyle="None"
         ResizeMode="NoResize"
         ShowInTaskbar="False"
         Topmost="True"
+        AllowsTransparency="True"
+        Background="Transparent"
         WindowStartupLocation="Manual"
+        FontFamily="Segoe UI"
         Deactivated="OnDeactivated">
 
-    <!-- Thin border so the borderless popup still reads as a distinct surface. -->
-    <Border BorderBrush="#FF3C3C3C" BorderThickness="1" Background="White">
-        <Grid Margin="8">
+    <Window.Resources>
+        <!-- Brand + neutral palette, shared across the popup. -->
+        <SolidColorBrush x:Key="Accent" Color="#4F46E5" />
+        <SolidColorBrush x:Key="Surface" Color="#FFFFFF" />
+        <SolidColorBrush x:Key="Subtle" Color="#F3F4F6" />
+        <SolidColorBrush x:Key="Border" Color="#E5E7EB" />
+        <SolidColorBrush x:Key="TextPrimary" Color="#111827" />
+        <SolidColorBrush x:Key="TextMuted" Color="#6B7280" />
+
+        <!-- Search box: a soft, rounded, borderless field. -->
+        <Style x:Key="SearchBoxStyle" TargetType="TextBox">
+            <Setter Property="Background" Value="{StaticResource Subtle}" />
+            <Setter Property="Foreground" Value="{StaticResource TextPrimary}" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CaretBrush" Value="{StaticResource Accent}" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Padding" Value="10,8" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border CornerRadius="8"
+                                Background="{TemplateBinding Background}"
+                                Padding="{TemplateBinding Padding}">
+                            <ScrollViewer x:Name="PART_ContentHost" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- History rows: rounded, with hover and an accent-filled selection. -->
+        <Style x:Key="ClipItemStyle" TargetType="ListBoxItem">
+            <Setter Property="Foreground" Value="{StaticResource TextPrimary}" />
+            <Setter Property="Padding" Value="10,7" />
+            <Setter Property="Margin" Value="0,1" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border x:Name="Bd" CornerRadius="6"
+                                Background="Transparent"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource Subtle}" />
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource Accent}" />
+                                <Setter Property="Foreground" Value="White" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <!-- Outer margin leaves room for the drop shadow; the card is the Border. -->
+    <Border Margin="12" CornerRadius="12"
+            Background="{StaticResource Surface}"
+            BorderBrush="{StaticResource Border}" BorderThickness="1">
+        <Border.Effect>
+            <DropShadowEffect Color="#000000" Opacity="0.22"
+                              BlurRadius="20" ShadowDepth="0" />
+        </Border.Effect>
+
+        <Grid Margin="12">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBox x:Name="SearchBox" Grid.Row="0"
-                     Margin="0,0,0,8" Padding="4"
-                     KeyDown="OnSearchKeyDown"
-                     TextChanged="OnSearchTextChanged" />
+            <!-- Header: brand mark + live item count. -->
+            <Grid Grid.Row="0" Margin="2,0,2,10">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border Width="14" Height="14" CornerRadius="4"
+                            Background="{StaticResource Accent}" />
+                    <TextBlock Text="ClipStack" Margin="8,0,0,0"
+                               FontWeight="SemiBold" FontSize="13"
+                               Foreground="{StaticResource TextPrimary}"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+                <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center"
+                           FontSize="11" Foreground="{StaticResource TextMuted}"
+                           Text="{Binding Items.Count, ElementName=HistoryList}" />
+            </Grid>
 
-            <ListBox x:Name="HistoryList" Grid.Row="1"
-                     HorizontalContentAlignment="Stretch"
-                     MouseDoubleClick="OnListDoubleClick">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Preview}"
-                                   TextTrimming="CharacterEllipsis"
-                                   Padding="2" />
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+            <!-- Search field with a placeholder that shows only while empty. -->
+            <Grid Grid.Row="1" Margin="0,0,0,8">
+                <TextBox x:Name="SearchBox"
+                         Style="{StaticResource SearchBoxStyle}"
+                         KeyDown="OnSearchKeyDown"
+                         TextChanged="OnSearchTextChanged" />
+                <TextBlock Text="Search clips…" IsHitTestVisible="False"
+                           Margin="12,0,0,0" VerticalAlignment="Center"
+                           FontSize="13" Foreground="{StaticResource TextMuted}">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Text, ElementName=SearchBox}" Value="">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </Grid>
 
-            <TextBlock Grid.Row="2" Margin="2,8,2,0"
-                       FontSize="11" Foreground="#FF808080"
+            <!-- The history list, plus an empty-state message behind it. -->
+            <Grid Grid.Row="2">
+                <ListBox x:Name="HistoryList"
+                         Background="Transparent" BorderThickness="0"
+                         HorizontalContentAlignment="Stretch"
+                         ItemContainerStyle="{StaticResource ClipItemStyle}"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                         MouseDoubleClick="OnListDoubleClick">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Preview}"
+                                       TextTrimming="CharacterEllipsis" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <TextBlock Text="No clips to show"
+                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                           FontSize="12" Foreground="{StaticResource TextMuted}">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding HasItems, ElementName=HistoryList}" Value="False">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </Grid>
+
+            <!-- Keyboard hint. -->
+            <TextBlock Grid.Row="3" Margin="2,10,2,0"
+                       FontSize="11" Foreground="{StaticResource TextMuted}"
                        Text="↑↓ select · Enter paste · Esc close" />
         </Grid>
     </Border>
