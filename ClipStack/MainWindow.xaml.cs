@@ -3,6 +3,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Interop;
+using System.Windows.Threading;
 using ClipStack.Models;
 using ClipStack.Services;
 
@@ -22,6 +24,11 @@ public partial class MainWindow : Window
 {
     private readonly ICollectionView _view;
     private string _searchText = string.Empty;
+
+    // True only during the show sequence. Forcing the window to the foreground
+    // can fire a transient Deactivated; while showing we ignore it so the popup
+    // does not immediately hide itself.
+    private bool _isShowing;
 
     /// <summary>Raised when the user picks an entry from the list.</summary>
     public event Action<ClipboardEntry>? EntryChosen;
@@ -43,14 +50,23 @@ public partial class MainWindow : Window
     /// </summary>
     public void ShowAsPopup()
     {
+        _isShowing = true;
+
         SearchBox.Text = string.Empty; // triggers a refresh via TextChanged
         PositionAtCursor();
 
         Show();
+
+        // A global hotkey fires while another app is in front, so a plain
+        // Activate() is often refused. Force ourselves to the foreground.
+        WindowActivator.ForceToForeground(new WindowInteropHelper(this).Handle);
         Activate();
 
         SelectFirst();
         SearchBox.Focus();
+
+        // Re-enable click-away-to-close once the show has fully settled.
+        Dispatcher.BeginInvoke(() => _isShowing = false, DispatcherPriority.Background);
     }
 
     private bool MatchesSearch(object item)
@@ -95,8 +111,13 @@ public partial class MainWindow : Window
 
     private void OnListDoubleClick(object sender, MouseButtonEventArgs e) => ChooseSelected();
 
-    // Clicking outside the popup dismisses it, the way a launcher menu would.
-    private void OnDeactivated(object? sender, EventArgs e) => Hide();
+    // Clicking outside the popup dismisses it, the way a launcher menu would —
+    // but not during the show sequence, which can briefly deactivate us.
+    private void OnDeactivated(object? sender, EventArgs e)
+    {
+        if (!_isShowing)
+            Hide();
+    }
 
     private void SelectFirst()
     {
