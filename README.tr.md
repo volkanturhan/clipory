@@ -21,6 +21,7 @@ kopyaladım" diye kaybetmek yok.
 - **Favoriler** — sık kullandığın kopyaları sabitle; hep üstte kalır, asla silinmez.
 - **Yeniden başlatmaya dayanır** — geçmişin (ve sabitlerin) kaydedilip geri yüklenir.
 - **Windows ile başla** — isteğe bağlı, tepsi menüsünden aç/kapa.
+- **İngilizce & Türkçe** — arayüz dilini tepsiden değiştir.
 - **Yoldan çekilir** — sistem tepsisinde çalışır, görev çubuğunu meşgul etmez.
 - **Tasarımı gereği gizli** — her şey senin makinende kalır, hiçbir şey yüklenmez.
 

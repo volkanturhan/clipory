@@ -21,6 +21,7 @@ copied one more thing.
 - **Favourites** — pin the clips you reuse; they stay on top and are never dropped.
 - **Survives restarts** — your history (and pins) are saved and restored.
 - **Start with Windows** — optional, toggled from the tray menu.
+- **English & Turkish** — switch the interface language from the tray.
 - **Stays out of the way** — runs from the system tray, no taskbar clutter.
 - **Private by design** — everything stays on your machine; nothing is uploaded.
 
