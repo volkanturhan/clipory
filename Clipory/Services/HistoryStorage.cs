@@ -1,12 +1,12 @@
 using System.IO;
 using System.Text.Json;
-using ClipStack.Models;
+using Clipory.Models;
 
-namespace ClipStack.Services;
+namespace Clipory.Services;
 
 /// <summary>
 /// Persists the clipboard history to disk so it survives restarts, storing it
-/// as JSON under %APPDATA%\ClipStack. All operations are best-effort: a missing
+/// as JSON under %APPDATA%\Clipory. All operations are best-effort: a missing
 /// or corrupt file simply yields an empty history, and a failed save is
 /// swallowed rather than allowed to crash the app.
 /// </summary>
@@ -24,7 +24,7 @@ public sealed class HistoryStorage
     {
         var folder = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "ClipStack");
+            "Clipory");
         Directory.CreateDirectory(folder);
         _filePath = Path.Combine(folder, "history.json");
     }

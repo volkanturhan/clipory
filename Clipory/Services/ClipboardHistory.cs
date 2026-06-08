@@ -1,7 +1,7 @@
 using System.Collections.ObjectModel;
-using ClipStack.Models;
+using Clipory.Models;
 
-namespace ClipStack.Services;
+namespace Clipory.Services;
 
 /// <summary>
 /// Keeps the most recently copied text items in memory. Ordering is "pinned

@@ -1,16 +1,16 @@
-# ClipStack
+# Clipory
 
 **[English](README.md) | Türkçe**
 
 Hafif bir Windows pano geçmişi yöneticisi.
 
-ClipStack sistem tepsisinde sessizce durur ve kopyaladığın her şeyi hatırlar.
+Clipory sistem tepsisinde sessizce durur ve kopyaladığın her şeyi hatırlar.
 Bir kısayola basıp son kopyaladıklarını açarsın, birini seçersin ve o an
 çalıştığın uygulamaya doğrudan yapışır — bir şeyi "üstüne bir şey daha
 kopyaladım" diye kaybetmek yok.
 
 <p align="center">
-  <img src="docs/screenshot.png" alt="ClipStack popup" width="360" />
+  <img src="docs/screenshot.png" alt="Clipory popup" width="360" />
 </p>
 
 ## Özellikler
@@ -27,26 +27,26 @@ kopyaladım" diye kaybetmek yok.
 
 ## İndir
 
-> **Not:** ClipStack henüz yayınlanmadı — aşağıdaki linkler, ilk sürüm
+> **Not:** Clipory henüz yayınlanmadı — aşağıdaki linkler, ilk sürüm
 > oluşturulduğunda çalışır hale gelecek.
 
-[En son sürümden](https://github.com/volkanturhan/ClipStack/releases/latest) birini indir:
+[En son sürümden](https://github.com/volkanturhan/Clipory/releases/latest) birini indir:
 
 | Sürüm | Boyut | Gereksinim |
 | --- | --- | --- |
-| **[ClipStack.exe](https://github.com/volkanturhan/ClipStack/releases/latest/download/ClipStack.exe)** | ~68 MB | Yok — direkt çalışır |
-| **[ClipStack-lite.exe](https://github.com/volkanturhan/ClipStack/releases/latest/download/ClipStack-lite.exe)** | ~0.4 MB | [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0/runtime) — yoksa Windows ilk açılışta kurmayı önerir |
+| **[Clipory.exe](https://github.com/volkanturhan/Clipory/releases/latest/download/Clipory.exe)** | ~68 MB | Yok — direkt çalışır |
+| **[Clipory-lite.exe](https://github.com/volkanturhan/Clipory/releases/latest/download/Clipory-lite.exe)** | ~0.4 MB | [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0/runtime) — yoksa Windows ilk açılışta kurmayı önerir |
 
-Hangisi? Emin değilsen **ClipStack.exe**'yi seç — hiçbir şey kurmadan her
-Windows'ta çalışır. **ClipStack-lite.exe** minik ama .NET 8 runtime gerektirir.
+Hangisi? Emin değilsen **Clipory.exe**'yi seç — hiçbir şey kurmadan her
+Windows'ta çalışır. **Clipory-lite.exe** minik ama .NET 8 runtime gerektirir.
 
 İlk açılışta Windows SmartScreen "bilinmeyen yayıncı" uyarısı verebilir:
 **Ek bilgi → Yine de çalıştır**'a tıkla.
 
 ## Nasıl kullanılır
 
-1. ClipStack'i başlat — sessizce sistem tepsisine yerleşir.
-2. Her zamanki gibi kopyala; ClipStack hatırlar.
+1. Clipory'i başlat — sessizce sistem tepsisine yerleşir.
+2. Her zamanki gibi kopyala; Clipory hatırlar.
 3. **`Ctrl + Shift + V`** ile popup'ı, içinde olduğun uygulamanın üstünde aç.
 4. Yazarak filtrele, **↑ / ↓** ile gez, **Enter** (veya çift tıkla) ile seçtiğin
    kopyayı o uygulamaya geri yapıştır.
@@ -58,7 +58,7 @@ Tepsi ikonuna sağ tık: **Open**, **Clear history**, **Start with Windows**,
 
 ## Verilerin nerede tutulur
 
-Geçmiş yerel olarak `%APPDATA%\ClipStack\history.json` içinde saklanır ve
+Geçmiş yerel olarak `%APPDATA%\Clipory\history.json` içinde saklanır ve
 makinenden asla çıkmaz. Temizlemek için tepsi menüsündeki **Clear history**'yi
 kullan (sabitlenenler korunur); sabitlenenleri popup'tan tek tek kaldırabilirsin.
 
@@ -66,9 +66,9 @@ kullan (sabitlenenler korunur); sabitlenenleri popup'tan tek tek kaldırabilirsi
 
 ```bash
 # Çalıştır
-dotnet run --project ClipStack/ClipStack.csproj
+dotnet run --project Clipory/Clipory.csproj
 
-# Paylaşılabilir tek dosya exe (çıktı: dist/win-x64/ClipStack.exe)
+# Paylaşılabilir tek dosya exe (çıktı: dist/win-x64/Clipory.exe)
 pwsh tools/publish.ps1
 ```
 

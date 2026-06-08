@@ -7,14 +7,14 @@ using System.Windows.Interop;
 // the WPF clipboard API here.
 using Clipboard = System.Windows.Clipboard;
 
-namespace ClipStack.Services;
+namespace Clipory.Services;
 
 /// <summary>
 /// Watches the Windows clipboard and raises <see cref="TextCaptured"/> whenever
 /// new text is copied anywhere on the system.
 ///
 /// Windows notifies listeners of clipboard changes by posting a window message,
-/// so we need a window to receive it. ClipStack has no visible window of its own
+/// so we need a window to receive it. Clipory has no visible window of its own
 /// while idle, so this class spins up a <em>message-only</em> window: an
 /// invisible window that exists purely to receive messages. We register it with
 /// <c>AddClipboardFormatListener</c> and translate each <c>WM_CLIPBOARDUPDATE</c>
@@ -45,7 +45,7 @@ public sealed class ClipboardMonitor : IDisposable
     public ClipboardMonitor()
     {
         // Build the invisible message-only window and start listening on it.
-        var parameters = new HwndSourceParameters("ClipStackClipboardMonitor")
+        var parameters = new HwndSourceParameters("CliporyClipboardMonitor")
         {
             ParentWindow = HWND_MESSAGE,
         };

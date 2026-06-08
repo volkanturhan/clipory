@@ -2,12 +2,12 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Navigation;
-using ClipStack.Services;
+using Clipory.Services;
 
 // Disambiguate from System.Windows.Localization (pulled in via System.Windows).
-using Localization = ClipStack.Services.Localization;
+using Localization = Clipory.Services.Localization;
 
-namespace ClipStack;
+namespace Clipory;
 
 /// <summary>
 /// A small "About" dialog: icon, name, version, author, project link and

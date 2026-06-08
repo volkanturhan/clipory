@@ -1,11 +1,11 @@
 using System.IO;
 using System.Text.Json;
 
-namespace ClipStack.Services;
+namespace Clipory.Services;
 
 /// <summary>
 /// Persists small user preferences (currently just the chosen language) as JSON
-/// under %APPDATA%\ClipStack. Best-effort, like <see cref="HistoryStorage"/>:
+/// under %APPDATA%\Clipory. Best-effort, like <see cref="HistoryStorage"/>:
 /// failures fall back to defaults rather than throwing.
 /// </summary>
 public sealed class SettingsStore
@@ -20,7 +20,7 @@ public sealed class SettingsStore
     {
         var folder = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "ClipStack");
+            "Clipory");
         Directory.CreateDirectory(folder);
         _filePath = Path.Combine(folder, "settings.json");
     }

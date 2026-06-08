@@ -1,11 +1,11 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace ClipStack.Models;
+namespace Clipory.Models;
 
 /// <summary>
 /// A single item captured from the clipboard.
-/// For now ClipStack only tracks text; richer formats (images, files) can be
+/// For now Clipory only tracks text; richer formats (images, files) can be
 /// added later without changing how the history store works.
 /// </summary>
 public sealed class ClipboardEntry : INotifyPropertyChanged

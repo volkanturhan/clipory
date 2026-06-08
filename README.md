@@ -1,16 +1,16 @@
-# ClipStack
+# Clipory
 
 **English | [Türkçe](README.tr.md)**
 
 A lightweight Windows clipboard history manager.
 
-ClipStack lives quietly in your system tray and remembers everything you copy.
+Clipory lives quietly in your system tray and remembers everything you copy.
 Press a hotkey to bring up your recent clips, pick one, and it's pasted straight
 into whatever app you're working in — no more losing something because you
 copied one more thing.
 
 <p align="center">
-  <img src="docs/screenshot.png" alt="ClipStack popup" width="360" />
+  <img src="docs/screenshot.png" alt="Clipory popup" width="360" />
 </p>
 
 ## Features
@@ -27,26 +27,26 @@ copied one more thing.
 
 ## Download
 
-> **Note:** ClipStack isn't published yet — the links below go live once the
+> **Note:** Clipory isn't published yet — the links below go live once the
 > first release is created.
 
-Grab one from the [latest release](https://github.com/volkanturhan/ClipStack/releases/latest):
+Grab one from the [latest release](https://github.com/volkanturhan/Clipory/releases/latest):
 
 | Build | Size | Requirements |
 | --- | --- | --- |
-| **[ClipStack.exe](https://github.com/volkanturhan/ClipStack/releases/latest/download/ClipStack.exe)** | ~68 MB | None — just run it |
-| **[ClipStack-lite.exe](https://github.com/volkanturhan/ClipStack/releases/latest/download/ClipStack-lite.exe)** | ~0.4 MB | [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0/runtime) — Windows offers to install it on first run if it's missing |
+| **[Clipory.exe](https://github.com/volkanturhan/Clipory/releases/latest/download/Clipory.exe)** | ~68 MB | None — just run it |
+| **[Clipory-lite.exe](https://github.com/volkanturhan/Clipory/releases/latest/download/Clipory-lite.exe)** | ~0.4 MB | [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0/runtime) — Windows offers to install it on first run if it's missing |
 
-Not sure which? Pick **ClipStack.exe** — it runs on any Windows PC with nothing
-else to install. **ClipStack-lite.exe** is tiny but needs the .NET 8 runtime.
+Not sure which? Pick **Clipory.exe** — it runs on any Windows PC with nothing
+else to install. **Clipory-lite.exe** is tiny but needs the .NET 8 runtime.
 
 The first time you run it, Windows SmartScreen may warn about an unknown
 publisher: click **More info → Run anyway**.
 
 ## How to use
 
-1. Launch ClipStack — it starts quietly in the system tray.
-2. Copy things as you normally would; ClipStack remembers them.
+1. Launch Clipory — it starts quietly in the system tray.
+2. Copy things as you normally would; Clipory remembers them.
 3. Press **`Ctrl + Shift + V`** to open the popup over whatever app you're in.
 4. Start typing to filter, move with **↑ / ↓**, and press **Enter** (or
    double-click) to paste the chosen clip back into that app.
@@ -58,7 +58,7 @@ Windows**, and **Quit**.
 
 ## Where your data lives
 
-History is stored locally at `%APPDATA%\ClipStack\history.json` and never leaves
+History is stored locally at `%APPDATA%\Clipory\history.json` and never leaves
 your machine. Use **Clear history** in the tray menu to wipe it (pinned clips are
 kept); pinned items can be removed individually from the popup.
 
@@ -66,9 +66,9 @@ kept); pinned items can be removed individually from the popup.
 
 ```bash
 # Run it
-dotnet run --project ClipStack/ClipStack.csproj
+dotnet run --project Clipory/Clipory.csproj
 
-# Build the shareable single-file exe (output: dist/win-x64/ClipStack.exe)
+# Build the shareable single-file exe (output: dist/win-x64/Clipory.exe)
 pwsh tools/publish.ps1
 ```
 

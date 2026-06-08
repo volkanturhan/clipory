@@ -1,17 +1,17 @@
 using System.Windows;
-using ClipStack.Models;
-using ClipStack.Services;
+using Clipory.Models;
+using Clipory.Services;
 
 // Enabling WinForms (for the tray icon) pulls the System.Windows.Forms versions
 // of these types into scope too, so spell out that we mean the WPF ones.
 using Application = System.Windows.Application;
 using Clipboard = System.Windows.Clipboard;
-using Localization = ClipStack.Services.Localization;
+using Localization = Clipory.Services.Localization;
 
-namespace ClipStack;
+namespace Clipory;
 
 /// <summary>
-/// Application entry point. Wires together the long-lived pieces of ClipStack
+/// Application entry point. Wires together the long-lived pieces of Clipory
 /// and runs it as a tray application: there is no window on startup, the app
 /// lives in the system tray, and it only exits when the user chooses "Quit".
 ///
@@ -36,10 +36,10 @@ public partial class App : Application
 
     protected override void OnStartup(StartupEventArgs e)
     {
-        // Only one ClipStack should watch the clipboard at a time. If another
+        // Only one Clipory should watch the clipboard at a time. If another
         // instance already holds the mutex, bow out quietly.
         _singleInstanceMutex = new Mutex(initiallyOwned: true,
-            @"Local\ClipStack.SingleInstance", out var isFirstInstance);
+            @"Local\Clipory.SingleInstance", out var isFirstInstance);
         if (!isFirstInstance)
         {
             Shutdown();

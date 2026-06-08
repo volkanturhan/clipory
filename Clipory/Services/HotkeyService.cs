@@ -2,7 +2,7 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
 
-namespace ClipStack.Services;
+namespace Clipory.Services;
 
 /// <summary>
 /// Registers a system-wide hotkey (Ctrl + Shift + V) and raises
@@ -50,7 +50,7 @@ public sealed class HotkeyService : IDisposable
 
     public HotkeyService()
     {
-        var parameters = new HwndSourceParameters("ClipStackHotkey")
+        var parameters = new HwndSourceParameters("CliporyHotkey")
         {
             ParentWindow = HWND_MESSAGE,
         };

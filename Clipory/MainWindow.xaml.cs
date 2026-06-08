@@ -5,14 +5,14 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Threading;
-using ClipStack.Models;
-using ClipStack.Services;
+using Clipory.Models;
+using Clipory.Services;
 
 // WinForms is enabled for the tray icon, so disambiguate the input event args
 // in favour of the WPF ones this window actually uses.
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 
-namespace ClipStack;
+namespace Clipory;
 
 /// <summary>
 /// The quick-pick popup. It shows the clipboard history, lets the user filter
