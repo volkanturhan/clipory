@@ -1,21 +1,36 @@
-# Builds the shareable ClipStack package: a single, self-contained Windows
-# executable that runs without the .NET runtime installed.
+# Builds both shareable ClipStack packages and gathers them under dist/release:
 #
-# Output: dist/win-x64/ClipStack.exe  (~68 MB, compressed)
+#   ClipStack.exe       self-contained (~68 MB) — runs without installing .NET
+#   ClipStack-lite.exe  framework-dependent (~0.4 MB) — needs the .NET 8 Desktop
+#                       Runtime (Windows prompts to install it on first run if
+#                       it is missing)
 $ErrorActionPreference = 'Stop'
 
 $root = Split-Path $PSScriptRoot -Parent
 $project = Join-Path $root 'ClipStack\ClipStack.csproj'
-$output = Join-Path $root 'dist\win-x64'
+$selfContainedDir = Join-Path $root 'dist\win-x64'
+$liteDir = Join-Path $root 'dist\win-x64-fxdep'
+$releaseDir = Join-Path $root 'dist\release'
 
-dotnet publish $project `
-    -c Release `
-    -r win-x64 `
-    --self-contained true `
+# Self-contained: bundles the .NET + WPF runtime so it runs on any Windows box.
+dotnet publish $project -c Release -r win-x64 --self-contained true `
     -p:PublishSingleFile=true `
     -p:IncludeNativeLibrariesForSelfExtract=true `
     -p:EnableCompressionInSingleFile=true `
-    -o $output
+    -o $selfContainedDir
 
-$exe = Join-Path $output 'ClipStack.exe'
-Write-Output "Done: $exe ($([math]::Round((Get-Item $exe).Length / 1MB, 1)) MB)"
+# Framework-dependent: tiny, relies on an installed .NET 8 Desktop Runtime.
+dotnet publish $project -c Release -r win-x64 --self-contained false `
+    -p:PublishSingleFile=true `
+    -o $liteDir
+
+# Collect both under dist/release with clear, distinct names for the upload.
+New-Item -ItemType Directory -Force -Path $releaseDir | Out-Null
+Copy-Item (Join-Path $selfContainedDir 'ClipStack.exe') (Join-Path $releaseDir 'ClipStack.exe') -Force
+Copy-Item (Join-Path $liteDir 'ClipStack.exe') (Join-Path $releaseDir 'ClipStack-lite.exe') -Force
+
+Write-Output ''
+Write-Output 'Release assets (dist/release):'
+Get-ChildItem $releaseDir -Filter *.exe | ForEach-Object {
+    Write-Output ('  {0,-20} {1,6:N1} MB' -f $_.Name, ($_.Length / 1MB))
+}

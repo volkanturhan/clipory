@@ -27,14 +27,21 @@ copied one more thing.
 
 ## Download
 
-> **Note:** ClipStack isn't published yet — the link below goes live once the
+> **Note:** ClipStack isn't published yet — the links below go live once the
 > first release is created.
 
-1. Download **`ClipStack.exe`** from the
-   [latest release](https://github.com/volkanturhan/ClipStack/releases/latest).
-2. Run it. No installation, no .NET required — it's a single self-contained file.
-3. The first time, Windows SmartScreen may warn about an unknown publisher:
-   click **More info → Run anyway**.
+Grab one from the [latest release](https://github.com/volkanturhan/ClipStack/releases/latest):
+
+| Build | Size | Requirements |
+| --- | --- | --- |
+| **[ClipStack.exe](https://github.com/volkanturhan/ClipStack/releases/latest/download/ClipStack.exe)** | ~68 MB | None — just run it |
+| **[ClipStack-lite.exe](https://github.com/volkanturhan/ClipStack/releases/latest/download/ClipStack-lite.exe)** | ~0.4 MB | [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0/runtime) — Windows offers to install it on first run if it's missing |
+
+Not sure which? Pick **ClipStack.exe** — it runs on any Windows PC with nothing
+else to install. **ClipStack-lite.exe** is tiny but needs the .NET 8 runtime.
+
+The first time you run it, Windows SmartScreen may warn about an unknown
+publisher: click **More info → Run anyway**.
 
 ## How to use
 

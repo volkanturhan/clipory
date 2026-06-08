@@ -27,14 +27,21 @@ kopyaladım" diye kaybetmek yok.
 
 ## İndir
 
-> **Not:** ClipStack henüz yayınlanmadı — aşağıdaki link, ilk sürüm
+> **Not:** ClipStack henüz yayınlanmadı — aşağıdaki linkler, ilk sürüm
 > oluşturulduğunda çalışır hale gelecek.
 
-1. [En son sürümden](https://github.com/volkanturhan/ClipStack/releases/latest)
-   **`ClipStack.exe`** dosyasını indir.
-2. Çalıştır. Kurulum yok, .NET gerekmiyor — kendi içinde her şeyi barındıran tek dosya.
-3. İlk açılışta Windows SmartScreen "bilinmeyen yayıncı" uyarısı verebilir:
-   **Ek bilgi → Yine de çalıştır**'a tıkla.
+[En son sürümden](https://github.com/volkanturhan/ClipStack/releases/latest) birini indir:
+
+| Sürüm | Boyut | Gereksinim |
+| --- | --- | --- |
+| **[ClipStack.exe](https://github.com/volkanturhan/ClipStack/releases/latest/download/ClipStack.exe)** | ~68 MB | Yok — direkt çalışır |
+| **[ClipStack-lite.exe](https://github.com/volkanturhan/ClipStack/releases/latest/download/ClipStack-lite.exe)** | ~0.4 MB | [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0/runtime) — yoksa Windows ilk açılışta kurmayı önerir |
+
+Hangisi? Emin değilsen **ClipStack.exe**'yi seç — hiçbir şey kurmadan her
+Windows'ta çalışır. **ClipStack-lite.exe** minik ama .NET 8 runtime gerektirir.
+
+İlk açılışta Windows SmartScreen "bilinmeyen yayıncı" uyarısı verebilir:
+**Ek bilgi → Yine de çalıştır**'a tıkla.
 
 ## Nasıl kullanılır
 
