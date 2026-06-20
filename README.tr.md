@@ -51,13 +51,13 @@ normaldir; kullanmak için kısayola bas ya da tepsi ikonuna tıkla (aşağıdak
 5. Bir kopyaya **sağ tıkla** (veya **Ctrl + P**) sabitle; **Del** ile sil.
 6. **Esc** veya boşluğa tıklamak popup'ı kapatır.
 
-Tepsi ikonuna sağ tık: **Open**, **Clear history**, **Start with Windows**,
-**Quit**.
+Tepsi ikonuna sağ tık: **Aç**, **Geçmişi temizle**, **Windows ile başlat**,
+**Çıkış**.
 
 ## Verilerin nerede tutulur
 
 Geçmiş yerel olarak `%APPDATA%\Clipory\history.json` içinde saklanır ve
-makinenden asla çıkmaz. Temizlemek için tepsi menüsündeki **Clear history**'yi
+makinenden asla çıkmaz. Temizlemek için tepsi menüsündeki **Geçmişi temizle**'yi
 kullan (sabitlenenler korunur); sabitlenenleri popup'tan tek tek kaldırabilirsin.
 
 ## Paylaşılabilir exe oluştur
