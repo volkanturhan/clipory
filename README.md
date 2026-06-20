@@ -25,23 +25,20 @@ copied one more thing.
 - **Stays out of the way** — runs from the system tray, no taskbar clutter.
 - **Private by design** — everything stays on your machine; nothing is uploaded.
 
-## Download
+## Run it
 
-> **Note:** Clipory isn't published yet — the links below go live once the
-> first release is created.
+Clipory isn't published as a prebuilt download yet, so for now you run it from
+source. You'll need the [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+(the SDK, not just the runtime) on Windows.
 
-Grab one from the [latest release](https://github.com/volkanturhan/Clipory/releases/latest):
+```bash
+git clone https://github.com/volkanturhan/Clipory.git
+cd Clipory
+dotnet run --project Clipory/Clipory.csproj
+```
 
-| Build | Size | Requirements |
-| --- | --- | --- |
-| **[Clipory.exe](https://github.com/volkanturhan/Clipory/releases/latest/download/Clipory.exe)** | ~68 MB | None — just run it |
-| **[Clipory-lite.exe](https://github.com/volkanturhan/Clipory/releases/latest/download/Clipory-lite.exe)** | ~0.4 MB | [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0/runtime) — Windows offers to install it on first run if it's missing |
-
-Not sure which? Pick **Clipory.exe** — it runs on any Windows PC with nothing
-else to install. **Clipory-lite.exe** is tiny but needs the .NET 8 runtime.
-
-The first time you run it, Windows SmartScreen may warn about an unknown
-publisher: click **More info → Run anyway**.
+Clipory starts quietly in the system tray — **no window pops up**. That's normal;
+press the hotkey or click the tray icon to use it (see **How to use** below).
 
 ## How to use
 
@@ -62,13 +59,13 @@ History is stored locally at `%APPDATA%\Clipory\history.json` and never leaves
 your machine. Use **Clear history** in the tray menu to wipe it (pinned clips are
 kept); pinned items can be removed individually from the popup.
 
-## Build from source
+## Build a shareable exe
+
+Want a standalone `.exe` you can hand to someone without the SDK? Build it
+yourself — the output isn't checked into the repo:
 
 ```bash
-# Run it
-dotnet run --project Clipory/Clipory.csproj
-
-# Build the shareable single-file exe (output: dist/win-x64/Clipory.exe)
+# Builds into dist/ (self-contained Clipory.exe + lite build)
 pwsh tools/publish.ps1
 ```
 

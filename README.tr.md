@@ -25,23 +25,21 @@ kopyaladım" diye kaybetmek yok.
 - **Yoldan çekilir** — sistem tepsisinde çalışır, görev çubuğunu meşgul etmez.
 - **Tasarımı gereği gizli** — her şey senin makinende kalır, hiçbir şey yüklenmez.
 
-## İndir
+## Çalıştır
 
-> **Not:** Clipory henüz yayınlanmadı — aşağıdaki linkler, ilk sürüm
-> oluşturulduğunda çalışır hale gelecek.
+Clipory henüz hazır bir indirme olarak yayınlanmadı, bu yüzden şimdilik
+kaynaktan çalıştırıyorsun. Windows'ta [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+(sadece runtime değil, SDK) kurulu olmalı.
 
-[En son sürümden](https://github.com/volkanturhan/Clipory/releases/latest) birini indir:
+```bash
+git clone https://github.com/volkanturhan/Clipory.git
+cd Clipory
+dotnet run --project Clipory/Clipory.csproj
+```
 
-| Sürüm | Boyut | Gereksinim |
-| --- | --- | --- |
-| **[Clipory.exe](https://github.com/volkanturhan/Clipory/releases/latest/download/Clipory.exe)** | ~68 MB | Yok — direkt çalışır |
-| **[Clipory-lite.exe](https://github.com/volkanturhan/Clipory/releases/latest/download/Clipory-lite.exe)** | ~0.4 MB | [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0/runtime) — yoksa Windows ilk açılışta kurmayı önerir |
-
-Hangisi? Emin değilsen **Clipory.exe**'yi seç — hiçbir şey kurmadan her
-Windows'ta çalışır. **Clipory-lite.exe** minik ama .NET 8 runtime gerektirir.
-
-İlk açılışta Windows SmartScreen "bilinmeyen yayıncı" uyarısı verebilir:
-**Ek bilgi → Yine de çalıştır**'a tıkla.
+Clipory sessizce sistem tepsisinde başlar — **hiçbir pencere açılmaz**. Bu
+normaldir; kullanmak için kısayola bas ya da tepsi ikonuna tıkla (aşağıdaki
+**Nasıl kullanılır**'a bak).
 
 ## Nasıl kullanılır
 
@@ -62,13 +60,13 @@ Geçmiş yerel olarak `%APPDATA%\Clipory\history.json` içinde saklanır ve
 makinenden asla çıkmaz. Temizlemek için tepsi menüsündeki **Clear history**'yi
 kullan (sabitlenenler korunur); sabitlenenleri popup'tan tek tek kaldırabilirsin.
 
-## Kaynaktan derleme
+## Paylaşılabilir exe oluştur
+
+SDK olmadan birine verebileceğin bağımsız bir `.exe` mi istiyorsun? Kendin
+derle — çıktı repoya dahil edilmez:
 
 ```bash
-# Çalıştır
-dotnet run --project Clipory/Clipory.csproj
-
-# Paylaşılabilir tek dosya exe (çıktı: dist/win-x64/Clipory.exe)
+# dist/ içine derler (self-contained Clipory.exe + lite sürüm)
 pwsh tools/publish.ps1
 ```
 
