@@ -483,3 +483,8 @@ $RECYCLE.BIN/
 
 # Published distribution output
 dist/
+
+# Compiled binaries should never be committed (they live in bin/ and dist/,
+# but keep this as a belt-and-braces guard)
+*.exe
+*.dll
