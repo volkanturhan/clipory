@@ -34,6 +34,11 @@
                        RequestNavigate="OnNavigate">github.com/volkanturhan/Clipory</Hyperlink>
         </TextBlock>
 
+        <TextBlock TextAlignment="Center" Margin="0,2,0,0">
+            <Hyperlink NavigateUri="https://volkanturhan.com"
+                       RequestNavigate="OnNavigate">volkanturhan.com</Hyperlink>
+        </TextBlock>
+
         <TextBlock Text="MIT License" TextAlignment="Center" Margin="0,4,0,0"
                    FontSize="12" Foreground="#9CA3AF" />
 
