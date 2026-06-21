@@ -1,11 +1,11 @@
-# Generates Clipory's application icon: an indigo rounded square with a small
+# Generates clipory's application icon: an indigo rounded square with a small
 # stack of "cards", evoking a stack of saved clips.
 #
 # Frames are written as uncompressed 32-bit BMP (DIB) entries rather than PNG,
 # because System.Drawing.Icon / the WinForms NotifyIcon load BMP frames
 # reliably, whereas PNG-compressed frames can fail to decode.
 #
-# Run from anywhere; it writes ../Clipory/Assets/Clipory.ico.
+# Run from anywhere; it writes ../clipory/Assets/clipory.ico.
 Add-Type -AssemblyName System.Drawing
 
 function New-RoundedRect([single]$x, [single]$y, [single]$w, [single]$h, [single]$r) {
@@ -121,7 +121,7 @@ foreach ($single in $singles) {
 }
 $w.Flush()
 
-$target = Join-Path $PSScriptRoot '..\Clipory\Assets\Clipory.ico'
+$target = Join-Path $PSScriptRoot '..\clipory\Assets\clipory.ico'
 [System.IO.File]::WriteAllBytes($target, $out.ToArray())
 $w.Dispose()
 Write-Output "Wrote $((Resolve-Path $target).Path) ($((Get-Item $target).Length) bytes)"

@@ -1,13 +1,13 @@
-# Builds both shareable Clipory packages and gathers them under dist/release:
+# Builds both shareable clipory packages and gathers them under dist/release:
 #
-#   Clipory.exe       self-contained (~68 MB) — runs without installing .NET
-#   Clipory-lite.exe  framework-dependent (~0.4 MB) — needs the .NET 8 Desktop
+#   clipory.exe       self-contained (~68 MB) — runs without installing .NET
+#   clipory-lite.exe  framework-dependent (~0.4 MB) — needs the .NET 8 Desktop
 #                       Runtime (Windows prompts to install it on first run if
 #                       it is missing)
 $ErrorActionPreference = 'Stop'
 
 $root = Split-Path $PSScriptRoot -Parent
-$project = Join-Path $root 'Clipory\Clipory.csproj'
+$project = Join-Path $root 'clipory\clipory.csproj'
 $selfContainedDir = Join-Path $root 'dist\win-x64'
 $liteDir = Join-Path $root 'dist\win-x64-fxdep'
 $releaseDir = Join-Path $root 'dist\release'
@@ -26,8 +26,8 @@ dotnet publish $project -c Release -r win-x64 --self-contained false `
 
 # Collect both under dist/release with clear, distinct names for the upload.
 New-Item -ItemType Directory -Force -Path $releaseDir | Out-Null
-Copy-Item (Join-Path $selfContainedDir 'Clipory.exe') (Join-Path $releaseDir 'Clipory.exe') -Force
-Copy-Item (Join-Path $liteDir 'Clipory.exe') (Join-Path $releaseDir 'Clipory-lite.exe') -Force
+Copy-Item (Join-Path $selfContainedDir 'clipory.exe') (Join-Path $releaseDir 'clipory.exe') -Force
+Copy-Item (Join-Path $liteDir 'clipory.exe') (Join-Path $releaseDir 'clipory-lite.exe') -Force
 
 Write-Output ''
 Write-Output 'Release assets (dist/release):'
