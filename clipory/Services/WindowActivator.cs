@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace Clipory.Services;
+namespace clipory.Services;
 
 /// <summary>
 /// Forces a window to the foreground, even when it is summoned from a process

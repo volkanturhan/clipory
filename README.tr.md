@@ -1,16 +1,16 @@
-# Clipory
+# clipory
 
 **[English](README.md) | Türkçe**
 
 Hafif bir Windows pano geçmişi yöneticisi.
 
-Clipory sistem tepsisinde sessizce durur ve kopyaladığın her şeyi hatırlar.
+clipory sistem tepsisinde sessizce durur ve kopyaladığın her şeyi hatırlar.
 Bir kısayola basıp son kopyaladıklarını açarsın, birini seçersin ve o an
 çalıştığın uygulamaya doğrudan yapışır — bir şeyi "üstüne bir şey daha
 kopyaladım" diye kaybetmek yok.
 
 <p align="center">
-  <img src="docs/screenshot.png" alt="Clipory popup" width="360" />
+  <img src="docs/screenshot.png" alt="clipory popup" width="360" />
 </p>
 
 ## Özellikler
@@ -27,24 +27,24 @@ kopyaladım" diye kaybetmek yok.
 
 ## Çalıştır
 
-Clipory henüz hazır bir indirme olarak yayınlanmadı, bu yüzden şimdilik
+clipory henüz hazır bir indirme olarak yayınlanmadı, bu yüzden şimdilik
 kaynaktan çalıştırıyorsun. Windows'ta [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
 (sadece runtime değil, SDK) kurulu olmalı.
 
 ```bash
-git clone https://github.com/volkanturhan/Clipory.git
-cd Clipory
-dotnet run --project Clipory/Clipory.csproj
+git clone https://github.com/volkanturhan/clipory.git
+cd clipory
+dotnet run --project clipory/clipory.csproj
 ```
 
-Clipory sessizce sistem tepsisinde başlar — **hiçbir pencere açılmaz**. Bu
+clipory sessizce sistem tepsisinde başlar — **hiçbir pencere açılmaz**. Bu
 normaldir; kullanmak için kısayola bas ya da tepsi ikonuna tıkla (aşağıdaki
 **Nasıl kullanılır**'a bak).
 
 ## Nasıl kullanılır
 
-1. Clipory'i başlat — sessizce sistem tepsisine yerleşir.
-2. Her zamanki gibi kopyala; Clipory hatırlar.
+1. clipory'i başlat — sessizce sistem tepsisine yerleşir.
+2. Her zamanki gibi kopyala; clipory hatırlar.
 3. **`Ctrl + Shift + V`** ile popup'ı, içinde olduğun uygulamanın üstünde aç.
 4. Yazarak filtrele, **↑ / ↓** ile gez, **Enter** (veya çift tıkla) ile seçtiğin
    kopyayı o uygulamaya geri yapıştır.
@@ -56,7 +56,7 @@ Tepsi ikonuna sağ tık: **Aç**, **Geçmişi temizle**, **Windows ile başlat**
 
 ## Verilerin nerede tutulur
 
-Geçmiş yerel olarak `%APPDATA%\Clipory\history.json` içinde saklanır ve
+Geçmiş yerel olarak `%APPDATA%\clipory\history.json` içinde saklanır ve
 makinenden asla çıkmaz. Temizlemek için tepsi menüsündeki **Geçmişi temizle**'yi
 kullan (sabitlenenler korunur); sabitlenenleri popup'tan tek tek kaldırabilirsin.
 
@@ -66,7 +66,7 @@ SDK olmadan birine verebileceğin bağımsız bir `.exe` mi istiyorsun? Kendin
 derle — çıktı repoya dahil edilmez:
 
 ```bash
-# dist/ içine derler (self-contained Clipory.exe + lite sürüm)
+# dist/ içine derler (self-contained clipory.exe + lite sürüm)
 pwsh tools/publish.ps1
 ```
 

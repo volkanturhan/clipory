@@ -1,10 +1,10 @@
 using System.Runtime.InteropServices;
 
-namespace Clipory.Services;
+namespace clipory.Services;
 
 /// <summary>
 /// Pastes a chosen clip into whichever window the user was working in before
-/// Clipory's popup appeared.
+/// clipory's popup appeared.
 ///
 /// The flow is: capture the foreground window <em>before</em> showing the popup
 /// (showing it would otherwise steal the foreground), then later restore that

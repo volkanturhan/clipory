@@ -1,10 +1,10 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 
-namespace Clipory.Services;
+namespace clipory.Services;
 
 /// <summary>
-/// The system-tray presence for Clipory. While the app is idle it lives here
+/// The system-tray presence for clipory. While the app is idle it lives here
 /// rather than on the taskbar. The context menu exposes the app's actions and
 /// settings; the events below let the application decide what each one does.
 ///
@@ -12,7 +12,7 @@ namespace Clipory.Services;
 /// are refreshed whenever <see cref="Localization"/> changes.
 ///
 /// Backed by the WinForms <see cref="NotifyIcon"/>, which ships with the .NET
-/// SDK so Clipory needs no third-party tray library.
+/// SDK so clipory needs no third-party tray library.
 /// </summary>
 public sealed class TrayIcon : IDisposable
 {
@@ -72,7 +72,7 @@ public sealed class TrayIcon : IDisposable
             // Fall back to a generic icon if ours fails to load — never crash
             // the whole app over a tray icon.
             Icon = _icon ?? SystemIcons.Application,
-            Text = "Clipory",
+            Text = "clipory",
             Visible = true,
             ContextMenuStrip = menu,
         };
@@ -99,14 +99,14 @@ public sealed class TrayIcon : IDisposable
     }
 
     /// <summary>
-    /// Loads the bundled Clipory icon at the system's small-icon size so the
+    /// Loads the bundled clipory icon at the system's small-icon size so the
     /// tray gets a crisp frame. Returns null on any failure.
     /// </summary>
     private static Icon? TryLoadAppIcon()
     {
         try
         {
-            var uri = new Uri("pack://application:,,,/Assets/Clipory.ico");
+            var uri = new Uri("pack://application:,,,/Assets/clipory.ico");
             using var stream = System.Windows.Application.GetResourceStream(uri).Stream;
             return new Icon(stream, SystemInformation.SmallIconSize);
         }

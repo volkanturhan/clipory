@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clipory", "Clipory\Clipory.csproj", "{D36A0C1D-B8D9-4F0C-9699-46B4839388BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "clipory", "clipory\clipory.csproj", "{D36A0C1D-B8D9-4F0C-9699-46B4839388BF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

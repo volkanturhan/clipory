@@ -1,25 +1,25 @@
 using Microsoft.Win32;
 
-namespace Clipory.Services;
+namespace clipory.Services;
 
 /// <summary>
-/// Controls whether Clipory launches automatically when the user signs in,
+/// Controls whether clipory launches automatically when the user signs in,
 /// via the per-user "Run" registry key. This needs no admin rights and only
 /// affects the current user.
 /// </summary>
 public static class AutoStart
 {
     private const string RunKeyPath = @"Software\Microsoft\Windows\CurrentVersion\Run";
-    private const string ValueName = "Clipory";
+    private const string ValueName = "clipory";
 
-    /// <summary>True if Clipory is registered to start with Windows.</summary>
+    /// <summary>True if clipory is registered to start with Windows.</summary>
     public static bool IsEnabled()
     {
         using var key = Registry.CurrentUser.OpenSubKey(RunKeyPath);
         return key?.GetValue(ValueName) is string value && value.Length > 0;
     }
 
-    /// <summary>Registers or unregisters Clipory for automatic startup.</summary>
+    /// <summary>Registers or unregisters clipory for automatic startup.</summary>
     public static void SetEnabled(bool enabled)
     {
         using var key = Registry.CurrentUser.OpenSubKey(RunKeyPath, writable: true)

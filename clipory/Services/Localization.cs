@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Clipory.Services;
+namespace clipory.Services;
 
 public enum AppLanguage
 {
@@ -31,7 +31,7 @@ public sealed class Localization : INotifyPropertyChanged
         ["Hint"] = "↑↓ select · Enter paste · Del remove · right-click to pin · Esc close",
         ["MenuPin"] = "Pin / Unpin",
         ["MenuDelete"] = "Delete",
-        ["TrayOpen"] = "Open Clipory",
+        ["TrayOpen"] = "Open clipory",
         ["TrayClear"] = "Clear history",
         ["TrayAutostart"] = "Start with Windows",
         ["TrayLanguage"] = "Language",
@@ -49,7 +49,7 @@ public sealed class Localization : INotifyPropertyChanged
         ["Hint"] = "↑↓ seç · Enter yapıştır · Del sil · sağ tık sabitle · Esc kapat",
         ["MenuPin"] = "Sabitle / Kaldır",
         ["MenuDelete"] = "Sil",
-        ["TrayOpen"] = "Clipory'yi Aç",
+        ["TrayOpen"] = "clipory'yi Aç",
         ["TrayClear"] = "Geçmişi temizle",
         ["TrayAutostart"] = "Windows ile başlat",
         ["TrayLanguage"] = "Dil",
