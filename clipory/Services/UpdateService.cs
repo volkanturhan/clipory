@@ -37,8 +37,10 @@ public sealed class UpdateService
     {
         try
         {
-            await using var stream = await Http.GetStreamAsync(LatestReleaseApi);
-            using var doc = await JsonDocument.ParseAsync(stream);
+            // The check is tiny; cap it at 10s so a flaky network can't hang it.
+            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+            await using var stream = await Http.GetStreamAsync(LatestReleaseApi, cts.Token);
+            using var doc = await JsonDocument.ParseAsync(stream, cancellationToken: cts.Token);
             var release = doc.RootElement;
 
             // "v1.2.0" → 1.2.0; ignore anything that isn't a parseable version.
@@ -75,8 +77,17 @@ public sealed class UpdateService
         var path = Path.Combine(Path.GetTempPath(),
             $"clipory-setup-v{update.Version.ToString(3)}.exe");
 
-        var bytes = await Http.GetByteArrayAsync(update.InstallerUrl);
-        await File.WriteAllBytesAsync(path, bytes);
+        // The installer is ~60 MB; allow a generous window and stream it straight
+        // to disk instead of buffering it all in memory. (A short total timeout
+        // here was the original "could not download" failure on slower links.)
+        using var cts = new CancellationTokenSource(TimeSpan.FromMinutes(10));
+        using (var response = await Http.GetAsync(update.InstallerUrl,
+                   HttpCompletionOption.ResponseHeadersRead, cts.Token))
+        {
+            response.EnsureSuccessStatusCode();
+            await using var file = File.Create(path);
+            await response.Content.CopyToAsync(file, cts.Token);
+        }
 
         // Hand off to the installer; it offers to close clipory and update it.
         Process.Start(new ProcessStartInfo(path) { UseShellExecute = true });
@@ -124,7 +135,10 @@ public sealed class UpdateService
 
     private static HttpClient CreateClient()
     {
-        var client = new HttpClient { Timeout = TimeSpan.FromSeconds(10) };
+        // No global timeout: the small version check and the large installer
+        // download need very different limits, so each call sets its own through
+        // a CancellationToken instead.
+        var client = new HttpClient { Timeout = Timeout.InfiniteTimeSpan };
         // GitHub's API rejects requests without a User-Agent; identify ourselves.
         client.DefaultRequestHeaders.UserAgent.ParseAdd("clipory-update-check");
         return client;
