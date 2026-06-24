@@ -31,6 +31,11 @@ public sealed class TrayIcon : IDisposable
     private readonly ToolStripMenuItem _languageItem = new();
     private readonly ToolStripMenuItem _englishItem = new("English");
     private readonly ToolStripMenuItem _turkishItem = new("Türkçe");
+    private readonly ToolStripMenuItem _themeItem = new();
+    private readonly ToolStripMenuItem _systemThemeItem = new();
+    private readonly ToolStripMenuItem _darkThemeItem = new();
+    private readonly ToolStripMenuItem _lightThemeItem = new();
+    private readonly ToolStripMenuItem _checkUpdateItem = new();
     private readonly ToolStripMenuItem _aboutItem = new();
     private readonly ToolStripMenuItem _quitItem = new();
 
@@ -48,6 +53,9 @@ public sealed class TrayIcon : IDisposable
 
     /// <summary>Raised when the user accepts the offered update.</summary>
     public event Action? UpdateRequested;
+
+    /// <summary>Raised when the user asks to check for updates now.</summary>
+    public event Action? CheckUpdateRequested;
 
     public TrayIcon()
     {
@@ -67,6 +75,15 @@ public sealed class TrayIcon : IDisposable
         _languageItem.DropDownItems.Add(_englishItem);
         _languageItem.DropDownItems.Add(_turkishItem);
 
+        _systemThemeItem.Click += (_, _) => ThemeService.Apply(AppTheme.System);
+        _darkThemeItem.Click += (_, _) => ThemeService.Apply(AppTheme.Dark);
+        _lightThemeItem.Click += (_, _) => ThemeService.Apply(AppTheme.Light);
+        _themeItem.DropDownItems.Add(_systemThemeItem);
+        _themeItem.DropDownItems.Add(_darkThemeItem);
+        _themeItem.DropDownItems.Add(_lightThemeItem);
+
+        _checkUpdateItem.Click += (_, _) => CheckUpdateRequested?.Invoke();
+
         var menu = new ContextMenuStrip();
         menu.Items.AddRange(new ToolStripItem[]
         {
@@ -76,6 +93,8 @@ public sealed class TrayIcon : IDisposable
             _clearItem,
             _autoStartItem,
             _languageItem,
+            _themeItem,
+            _checkUpdateItem,
             _aboutItem,
             new ToolStripSeparator(),
             _quitItem,
@@ -96,6 +115,8 @@ public sealed class TrayIcon : IDisposable
         _notifyIcon.BalloonTipClicked += (_, _) => UpdateRequested?.Invoke();
 
         Localization.Instance.LanguageChanged += ApplyLanguage;
+        // Re-tick the active theme entry whenever the theme changes.
+        ThemeService.Changed += ApplyLanguage;
         ApplyLanguage();
     }
 
@@ -108,6 +129,11 @@ public sealed class TrayIcon : IDisposable
         _clearItem.Text = text["TrayClear"];
         _autoStartItem.Text = text["TrayAutostart"];
         _languageItem.Text = text["TrayLanguage"];
+        _themeItem.Text = text["TrayTheme"];
+        _systemThemeItem.Text = text["ThemeSystem"];
+        _darkThemeItem.Text = text["ThemeDark"];
+        _lightThemeItem.Text = text["ThemeLight"];
+        _checkUpdateItem.Text = text["TrayCheckUpdate"];
         _aboutItem.Text = text["TrayAbout"];
         _quitItem.Text = text["TrayQuit"];
 
@@ -117,6 +143,10 @@ public sealed class TrayIcon : IDisposable
 
         _englishItem.Checked = text.Language == AppLanguage.English;
         _turkishItem.Checked = text.Language == AppLanguage.Turkish;
+
+        _systemThemeItem.Checked = ThemeService.Theme == AppTheme.System;
+        _darkThemeItem.Checked = ThemeService.Theme == AppTheme.Dark;
+        _lightThemeItem.Checked = ThemeService.Theme == AppTheme.Light;
     }
 
     /// <summary>
@@ -135,6 +165,18 @@ public sealed class TrayIcon : IDisposable
         _notifyIcon.BalloonTipTitle = text["UpdateBalloonTitle"];
         _notifyIcon.BalloonTipText = text["UpdateBalloonText"];
         _notifyIcon.ShowBalloonTip(5000);
+    }
+
+    /// <summary>
+    /// Shows a brief "you're up to date" balloon. Used to give feedback when the
+    /// user checks for updates manually and there is nothing newer.
+    /// </summary>
+    public void ShowUpToDate()
+    {
+        var text = Localization.Instance;
+        _notifyIcon.BalloonTipTitle = text["UpdateBalloonTitle"];
+        _notifyIcon.BalloonTipText = text["UpToDate"];
+        _notifyIcon.ShowBalloonTip(4000);
     }
 
     /// <summary>
@@ -158,6 +200,7 @@ public sealed class TrayIcon : IDisposable
     public void Dispose()
     {
         Localization.Instance.LanguageChanged -= ApplyLanguage;
+        ThemeService.Changed -= ApplyLanguage;
 
         // Hide before disposing so the icon disappears immediately instead of
         // lingering in the tray until the user hovers over it.

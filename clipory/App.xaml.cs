@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Threading;
 using clipory.Models;
 using clipory.Services;
 
@@ -32,6 +33,8 @@ public partial class App : Application
     private AboutWindow? _aboutWindow;
 
     private UpdateService _updates = null!;
+    // Periodically re-checks for updates so a long-running instance still notices.
+    private DispatcherTimer? _updateTimer;
     // The newer release found by the background check, awaiting the user's nod.
     private UpdateService.AvailableUpdate? _pendingUpdate;
 
@@ -63,6 +66,10 @@ public partial class App : Application
         Localization.Instance.LanguageChanged +=
             () => _settings.SaveLanguage(Localization.Instance.Language);
 
+        // Apply the saved colour theme before any window is built, then persist.
+        ThemeService.Apply(_settings.LoadTheme());
+        ThemeService.Changed += () => _settings.SaveTheme(ThemeService.Theme);
+
         // Restore the saved history, then keep persisting it as it changes.
         _storage = new HistoryStorage();
         _history = new ClipboardHistory();
@@ -86,23 +93,32 @@ public partial class App : Application
         _tray.ClearHistoryRequested += _history.ClearUnpinned;
         _tray.AboutRequested += ShowAbout;
         _tray.UpdateRequested += InstallPendingUpdate;
+        _tray.CheckUpdateRequested += () => _ = CheckForUpdateAsync(announceWhenCurrent: true);
         _tray.QuitRequested += Shutdown;
 
         // Quietly ask GitHub whether a newer clipory exists; if so the tray will
         // offer it. Fire-and-forget so a slow network never delays startup.
         _updates = new UpdateService();
-        _ = CheckForUpdateAsync();
+        _ = CheckForUpdateAsync(announceWhenCurrent: false);
+
+        // Re-check every few hours so an instance left running for days still
+        // notices a new release without needing a restart.
+        _updateTimer = new DispatcherTimer { Interval = TimeSpan.FromHours(6) };
+        _updateTimer.Tick += (_, _) => _ = CheckForUpdateAsync(announceWhenCurrent: false);
+        _updateTimer.Start();
     }
 
     /// <summary>
     /// Background check for a newer release. The await resumes on the UI thread,
     /// so touching the tray here is safe. Silent on failure by design.
     /// </summary>
-    private async Task CheckForUpdateAsync()
+    private async Task CheckForUpdateAsync(bool announceWhenCurrent)
     {
         _pendingUpdate = await _updates.CheckForUpdateAsync();
         if (_pendingUpdate is not null)
             _tray.ShowUpdateAvailable(_pendingUpdate.Version.ToString(3));
+        else if (announceWhenCurrent)
+            _tray.ShowUpToDate();   // give feedback only for a manual check
     }
 
     /// <summary>
