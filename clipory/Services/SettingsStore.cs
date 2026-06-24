@@ -4,13 +4,15 @@ using System.Text.Json;
 namespace clipory.Services;
 
 /// <summary>
-/// Persists small user preferences (currently just the chosen language) as JSON
-/// under %APPDATA%\clipory. Best-effort, like <see cref="HistoryStorage"/>:
-/// failures fall back to defaults rather than throwing.
+/// Persists small user preferences (language and colour theme) as JSON under
+/// %APPDATA%\clipory. Best-effort, like <see cref="HistoryStorage"/>: failures
+/// fall back to defaults rather than throwing.
 /// </summary>
 public sealed class SettingsStore
 {
-    private sealed record Data(string Language);
+    // Theme is nullable so older settings files (which only had a language) still
+    // load; a missing value just falls back to the default.
+    private sealed record Data(string Language, string? Theme = null);
 
     private static readonly JsonSerializerOptions JsonOptions = new() { WriteIndented = true };
 
@@ -28,28 +30,55 @@ public sealed class SettingsStore
     /// <summary>Loads the saved language, defaulting to English.</summary>
     public AppLanguage LoadLanguage()
     {
-        try
-        {
-            if (!File.Exists(_filePath))
-                return AppLanguage.English;
-
-            var data = JsonSerializer.Deserialize<Data>(File.ReadAllText(_filePath));
-            return data is not null && Enum.TryParse<AppLanguage>(data.Language, out var language)
-                ? language
-                : AppLanguage.English;
-        }
-        catch
-        {
-            return AppLanguage.English;
-        }
+        var data = Read();
+        return data is not null && Enum.TryParse<AppLanguage>(data.Language, out var language)
+            ? language
+            : AppLanguage.English;
     }
 
-    /// <summary>Saves the chosen language.</summary>
+    /// <summary>Loads the saved theme, defaulting to System.</summary>
+    public AppTheme LoadTheme()
+    {
+        var data = Read();
+        return data?.Theme is not null && Enum.TryParse<AppTheme>(data.Theme, out var theme)
+            ? theme
+            : AppTheme.System;
+    }
+
+    /// <summary>Saves the chosen language, preserving the stored theme.</summary>
     public void SaveLanguage(AppLanguage language)
+    {
+        var current = Read();
+        Write(new Data(language.ToString(), current?.Theme));
+    }
+
+    /// <summary>Saves the chosen theme, preserving the stored language.</summary>
+    public void SaveTheme(AppTheme theme)
+    {
+        var current = Read();
+        Write(new Data(current?.Language ?? AppLanguage.English.ToString(), theme.ToString()));
+    }
+
+    // Reads and parses the settings file, or null if it is missing/unreadable.
+    private Data? Read()
     {
         try
         {
-            File.WriteAllText(_filePath, JsonSerializer.Serialize(new Data(language.ToString()), JsonOptions));
+            return File.Exists(_filePath)
+                ? JsonSerializer.Deserialize<Data>(File.ReadAllText(_filePath))
+                : null;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private void Write(Data data)
+    {
+        try
+        {
+            File.WriteAllText(_filePath, JsonSerializer.Serialize(data, JsonOptions));
         }
         catch
         {
