@@ -18,17 +18,27 @@ kopyaladım" diye kaybetmek yok.
 - **Pano geçmişi** — en son kopyaladığın metinleri tutar.
 - **Hızlı erişim** — global kısayol (`Ctrl + Shift + V`) aranabilir bir liste açar.
 - **Anında geri yapıştır** — bir öğe seç, aktif uygulamaya yapışsın.
+- **Hızlı temizle** — birden çok kopyayı seç (Ctrl-tık veya Shift) ve tek seferde sil.
 - **Favoriler** — sık kullandığın kopyaları sabitle; hep üstte kalır, asla silinmez.
 - **Yeniden başlatmaya dayanır** — geçmişin (ve sabitlerin) kaydedilip geri yüklenir.
 - **Windows ile başla** — isteğe bağlı, tepsi menüsünden aç/kapa.
+- **Kendini günceller** — yeni sürüm çıkınca clipory tepsiden teklif eder; tek tıkla kurulur.
 - **İngilizce & Türkçe** — arayüz dilini tepsiden değiştir.
 - **Yoldan çekilir** — sistem tepsisinde çalışır, görev çubuğunu meşgul etmez.
 - **Tasarımı gereği gizli** — her şey senin makinende kalır, hiçbir şey yüklenmez.
 
-## Çalıştır
+## İndir
 
-clipory henüz hazır bir indirme olarak yayınlanmadı, bu yüzden şimdilik
-kaynaktan çalıştırıyorsun. Windows'ta [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+En güncel sürümü [**Releases**](https://github.com/volkanturhan/clipory/releases/latest) sayfasından indir:
+
+- **clipory-setup-…exe** — kurulum (önerilen). Yönetici izni gerekmez ve clipory bundan sonra kendini güncel tutar.
+- **clipory-…exe** — taşınabilir tek dosya; çalıştır yeter, kurulum yok.
+
+İkisi de self-contained, yani .NET kurulu olması gerekmez. Windows 10/11, 64-bit.
+
+## Kaynaktan çalıştır
+
+Kendin derlemeyi mi tercih edersin? Windows'ta [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
 (sadece runtime değil, SDK) kurulu olmalı.
 
 ```bash
@@ -48,7 +58,8 @@ normaldir; kullanmak için kısayola bas ya da tepsi ikonuna tıkla (aşağıdak
 3. **`Ctrl + Shift + V`** ile popup'ı, içinde olduğun uygulamanın üstünde aç.
 4. Yazarak filtrele, **↑ / ↓** ile gez, **Enter** (veya çift tıkla) ile seçtiğin
    kopyayı o uygulamaya geri yapıştır.
-5. Bir kopyaya **sağ tıkla** (veya **Ctrl + P**) sabitle; **Del** ile sil.
+5. Bir kopyaya **sağ tıkla** (veya **Ctrl + P**) sabitle. **Ctrl-tık** veya
+   **Shift + ↑/↓** ile birden çoğunu seç, **Del** ile hepsini birden sil.
 6. **Esc** veya boşluğa tıklamak popup'ı kapatır.
 
 Tepsi ikonuna sağ tık: **Aç**, **Geçmişi temizle**, **Windows ile başlat**,
@@ -60,14 +71,14 @@ Geçmiş yerel olarak `%APPDATA%\clipory\history.json` içinde saklanır ve
 makinenden asla çıkmaz. Temizlemek için tepsi menüsündeki **Geçmişi temizle**'yi
 kullan (sabitlenenler korunur); sabitlenenleri popup'tan tek tek kaldırabilirsin.
 
-## Paylaşılabilir exe oluştur
+## Kendin derle
 
-SDK olmadan birine verebileceğin bağımsız bir `.exe` mi istiyorsun? Kendin
-derle — çıktı repoya dahil edilmez:
+Yayın dosyalarını yerelde üretmek ister misin? Çıktı repoya dahil edilmez:
 
 ```bash
-# dist/ içine derler (self-contained clipory.exe + lite sürüm)
-pwsh tools/publish.ps1
+# Taşınabilir self-contained exe + Windows kurulumu, dist/release içine.
+# (Kurulum adımı Inno Setup ister: winget install JRSoftware.InnoSetup)
+pwsh tools/release.ps1
 ```
 
 ## Teknoloji
