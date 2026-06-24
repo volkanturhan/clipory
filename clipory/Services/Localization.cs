@@ -37,6 +37,11 @@ public sealed class Localization : INotifyPropertyChanged
         ["TrayLanguage"] = "Language",
         ["TrayAbout"] = "About",
         ["TrayQuit"] = "Quit",
+        // {0} is the new version, e.g. "Update to v1.1.0".
+        ["TrayUpdate"] = "Update to v{0}",
+        ["UpdateBalloonTitle"] = "clipory update",
+        ["UpdateBalloonText"] = "A new version is available. Click to install.",
+        ["UpdateFailed"] = "Could not download the update. Please try again later.",
         ["AboutDescription"] = "A lightweight clipboard history manager.",
         ["AboutVersion"] = "Version",
         ["AboutClose"] = "Close",
@@ -55,6 +60,11 @@ public sealed class Localization : INotifyPropertyChanged
         ["TrayLanguage"] = "Dil",
         ["TrayAbout"] = "Hakkında",
         ["TrayQuit"] = "Çıkış",
+        // {0} yeni sürüm numarası, örn. "v1.1.0 sürümüne güncelle".
+        ["TrayUpdate"] = "v{0} sürümüne güncelle",
+        ["UpdateBalloonTitle"] = "clipory güncellemesi",
+        ["UpdateBalloonText"] = "Yeni sürüm çıktı. Kurmak için tıklayın.",
+        ["UpdateFailed"] = "Güncelleme indirilemedi. Lütfen daha sonra tekrar deneyin.",
         ["AboutDescription"] = "Hafif bir pano geçmişi yöneticisi.",
         ["AboutVersion"] = "Sürüm",
         ["AboutClose"] = "Kapat",

@@ -6,6 +6,7 @@ using clipory.Services;
 // of these types into scope too, so spell out that we mean the WPF ones.
 using Application = System.Windows.Application;
 using Clipboard = System.Windows.Clipboard;
+using MessageBox = System.Windows.MessageBox;
 using Localization = clipory.Services.Localization;
 
 namespace clipory;
@@ -29,6 +30,10 @@ public partial class App : Application
     private TrayIcon _tray = null!;
     private MainWindow _window = null!;
     private AboutWindow? _aboutWindow;
+
+    private UpdateService _updates = null!;
+    // The newer release found by the background check, awaiting the user's nod.
+    private UpdateService.AvailableUpdate? _pendingUpdate;
 
     // The window that was focused when the popup was summoned, so a chosen clip
     // can be pasted back into it. IntPtr.Zero means "don't paste, just copy".
@@ -80,7 +85,45 @@ public partial class App : Application
         _tray.OpenRequested += ShowPopupForBrowsing;
         _tray.ClearHistoryRequested += _history.ClearUnpinned;
         _tray.AboutRequested += ShowAbout;
+        _tray.UpdateRequested += InstallPendingUpdate;
         _tray.QuitRequested += Shutdown;
+
+        // Quietly ask GitHub whether a newer clipory exists; if so the tray will
+        // offer it. Fire-and-forget so a slow network never delays startup.
+        _updates = new UpdateService();
+        _ = CheckForUpdateAsync();
+    }
+
+    /// <summary>
+    /// Background check for a newer release. The await resumes on the UI thread,
+    /// so touching the tray here is safe. Silent on failure by design.
+    /// </summary>
+    private async Task CheckForUpdateAsync()
+    {
+        _pendingUpdate = await _updates.CheckForUpdateAsync();
+        if (_pendingUpdate is not null)
+            _tray.ShowUpdateAvailable(_pendingUpdate.Version.ToString(3));
+    }
+
+    /// <summary>
+    /// Downloads and launches the installer for the pending update, then quits so
+    /// it can replace clipory's files. Tells the user if the download fails.
+    /// </summary>
+    private async void InstallPendingUpdate()
+    {
+        if (_pendingUpdate is null)
+            return;
+
+        try
+        {
+            await _updates.DownloadAndLaunchInstallerAsync(_pendingUpdate);
+            Shutdown();
+        }
+        catch
+        {
+            MessageBox.Show(Localization.Instance["UpdateFailed"], "clipory",
+                MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
     }
 
     /// <summary>Shows the About window, reusing it if already open.</summary>
