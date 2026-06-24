@@ -24,6 +24,7 @@ copied one more thing.
 - **Start with Windows** — optional, toggled from the tray menu.
 - **Self-updating** — when a new version ships, clipory offers it from the tray; one click installs it.
 - **English & Turkish** — switch the interface language from the tray.
+- **Dark mode** — System / Dark / Light theme from the tray (follows Windows by default).
 - **Stays out of the way** — runs from the system tray, no taskbar clutter.
 - **Private by design** — everything stays on your machine; nothing is uploaded.
 

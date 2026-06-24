@@ -24,6 +24,7 @@ kopyaladım" diye kaybetmek yok.
 - **Windows ile başla** — isteğe bağlı, tepsi menüsünden aç/kapa.
 - **Kendini günceller** — yeni sürüm çıkınca clipory tepsiden teklif eder; tek tıkla kurulur.
 - **İngilizce & Türkçe** — arayüz dilini tepsiden değiştir.
+- **Karanlık mod** — tepsiden Sistem / Koyu / Açık tema (varsayılan Windows'u takip eder).
 - **Yoldan çekilir** — sistem tepsisinde çalışır, görev çubuğunu meşgul etmez.
 - **Tasarımı gereği gizli** — her şey senin makinende kalır, hiçbir şey yüklenmez.
 
