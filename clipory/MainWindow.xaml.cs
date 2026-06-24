@@ -132,6 +132,9 @@ public partial class MainWindow : Window
 
     private void OnListDoubleClick(object sender, MouseButtonEventArgs e) => ChooseSelected();
 
+    // The header's × button: dismiss the popup, same as Esc or clicking away.
+    private void OnCloseClick(object sender, RoutedEventArgs e) => Hide();
+
     // Context-menu actions. The menu inherits the row's data context, so the
     // sender's DataContext is the entry that was right-clicked.
     private void OnPinClick(object sender, RoutedEventArgs e)
