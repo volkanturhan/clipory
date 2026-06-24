@@ -31,6 +31,11 @@ public partial class MainWindow : Window
     // does not immediately hide itself.
     private bool _isShowing;
 
+    // The moving end (focus) and fixed end (anchor) of a keyboard range
+    // selection driven by Shift+↑/↓. They collapse together on a single select.
+    private int _focusIndex = -1;
+    private int _anchorIndex = -1;
+
     /// <summary>Raised when the user picks an entry from the list.</summary>
     public event Action<ClipboardEntry>? EntryChosen;
 
@@ -100,13 +105,14 @@ public partial class MainWindow : Window
 
         switch (e.Key)
         {
-            // Let the arrow keys drive the list while the caret stays in the box.
+            // Arrows drive the list while the caret stays in the box; holding
+            // Shift extends a contiguous range instead of moving a single pick.
             case Key.Down:
-                MoveSelection(+1);
+                MoveSelection(+1, extend: Keyboard.Modifiers.HasFlag(ModifierKeys.Shift));
                 e.Handled = true;
                 break;
             case Key.Up:
-                MoveSelection(-1);
+                MoveSelection(-1, extend: Keyboard.Modifiers.HasFlag(ModifierKeys.Shift));
                 e.Handled = true;
                 break;
             case Key.Enter:
@@ -136,8 +142,15 @@ public partial class MainWindow : Window
 
     private void OnDeleteClick(object sender, RoutedEventArgs e)
     {
-        if (sender is FrameworkElement { DataContext: ClipboardEntry entry })
-            _history.Remove(entry);
+        if (sender is not FrameworkElement { DataContext: ClipboardEntry clicked })
+            return;
+
+        // If the right-clicked row is part of a multi-selection, clear the whole
+        // selection; otherwise just remove the one that was clicked.
+        if (HistoryList.SelectedItems.Count > 1 && HistoryList.SelectedItems.Contains(clicked))
+            DeleteSelected();
+        else
+            _history.Remove(clicked);
     }
 
     private void PinSelected()
@@ -148,15 +161,23 @@ public partial class MainWindow : Window
 
     private void DeleteSelected()
     {
-        if (HistoryList.SelectedItem is not ClipboardEntry entry)
+        // Snapshot first: removing entries mutates the live SelectedItems list.
+        var selected = HistoryList.SelectedItems.Cast<ClipboardEntry>().ToList();
+        if (selected.Count == 0)
             return;
 
-        var index = HistoryList.SelectedIndex;
-        _history.Remove(entry);
+        // Remember where the (top of the) removed block was, to re-anchor after.
+        var landing = Math.Min(_anchorIndex < 0 ? HistoryList.SelectedIndex : _anchorIndex,
+                               _focusIndex < 0 ? HistoryList.SelectedIndex : _focusIndex);
 
-        // Keep a sensible item selected after the removal.
+        foreach (var entry in selected)
+            _history.Remove(entry);
+
+        // Keep a sensible neighbour selected where the block used to be.
         if (HistoryList.Items.Count > 0)
-            HistoryList.SelectedIndex = Math.Min(index, HistoryList.Items.Count - 1);
+            SelectSingle(Math.Clamp(landing, 0, HistoryList.Items.Count - 1));
+        else
+            SelectFirst();
     }
 
     // Clicking outside the popup dismisses it, the way a launcher menu would —
@@ -169,25 +190,65 @@ public partial class MainWindow : Window
 
     private void SelectFirst()
     {
-        HistoryList.SelectedIndex = HistoryList.Items.Count > 0 ? 0 : -1;
-        ScrollToSelection();
+        if (HistoryList.Items.Count > 0)
+        {
+            SelectSingle(0);
+        }
+        else
+        {
+            _anchorIndex = _focusIndex = -1;
+            HistoryList.SelectedIndex = -1;
+        }
     }
 
-    private void MoveSelection(int delta)
+    private void MoveSelection(int delta, bool extend)
     {
         var count = HistoryList.Items.Count;
         if (count == 0)
             return;
 
-        var next = HistoryList.SelectedIndex + delta;
-        HistoryList.SelectedIndex = Math.Clamp(next, 0, count - 1);
-        ScrollToSelection();
+        if (!extend)
+        {
+            // Plain move: collapse to one item and walk it up or down.
+            var from = HistoryList.SelectedIndex < 0 ? 0 : HistoryList.SelectedIndex;
+            SelectSingle(Math.Clamp(from + delta, 0, count - 1));
+            return;
+        }
+
+        // Extending: anchor on the current single selection unless we are already
+        // mid-range (then keep growing from the tracked focus end).
+        if (HistoryList.SelectedItems.Count <= 1)
+            _anchorIndex = _focusIndex = HistoryList.SelectedIndex < 0 ? 0 : HistoryList.SelectedIndex;
+
+        _focusIndex = Math.Clamp(_focusIndex + delta, 0, count - 1);
+        SelectRange(_anchorIndex, _focusIndex);
+        ScrollIntoViewAt(_focusIndex);
     }
 
-    private void ScrollToSelection()
+    // Selects exactly one row and resets the range ends to it.
+    private void SelectSingle(int index)
     {
-        if (HistoryList.SelectedItem is not null)
-            HistoryList.ScrollIntoView(HistoryList.SelectedItem);
+        _anchorIndex = _focusIndex = index;
+        HistoryList.SelectedItems.Clear();
+        HistoryList.SelectedIndex = index;
+        ScrollIntoViewAt(index);
+    }
+
+    // Selects the inclusive run of rows between two indices.
+    private void SelectRange(int a, int b)
+    {
+        var lo = Math.Min(a, b);
+        var hi = Math.Max(a, b);
+
+        HistoryList.SelectedItems.Clear();
+        for (var i = lo; i <= hi; i++)
+            HistoryList.SelectedItems.Add(HistoryList.Items[i]);
+    }
+
+    private void ScrollIntoViewAt(int index)
+    {
+        if (index >= 0 && index < HistoryList.Items.Count)
+            HistoryList.ScrollIntoView(HistoryList.Items[index]);
     }
 
     private void ChooseSelected()

@@ -28,7 +28,7 @@ public sealed class Localization : INotifyPropertyChanged
     {
         ["SearchPlaceholder"] = "Search clips…",
         ["EmptyState"] = "No clips to show",
-        ["Hint"] = "↑↓ select · Enter paste · Del remove · right-click to pin · Esc close",
+        ["Hint"] = "↑↓ select · Shift+↑↓ / Ctrl-click multi-select · Enter paste · Del remove · Esc close",
         ["MenuPin"] = "Pin / Unpin",
         ["MenuDelete"] = "Delete",
         ["TrayOpen"] = "Open clipory",
@@ -51,7 +51,7 @@ public sealed class Localization : INotifyPropertyChanged
     {
         ["SearchPlaceholder"] = "Kopyalarda ara…",
         ["EmptyState"] = "Gösterilecek kopya yok",
-        ["Hint"] = "↑↓ seç · Enter yapıştır · Del sil · sağ tık sabitle · Esc kapat",
+        ["Hint"] = "↑↓ seç · Shift+↑↓ / Ctrl-tık çoklu seç · Enter yapıştır · Del sil · Esc kapat",
         ["MenuPin"] = "Sabitle / Kaldır",
         ["MenuDelete"] = "Sil",
         ["TrayOpen"] = "clipory'yi Aç",

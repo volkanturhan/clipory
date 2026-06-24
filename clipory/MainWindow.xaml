@@ -141,6 +141,7 @@
                          HorizontalContentAlignment="Stretch"
                          ItemContainerStyle="{StaticResource ClipItemStyle}"
                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                         SelectionMode="Extended"
                          MouseDoubleClick="OnListDoubleClick">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
