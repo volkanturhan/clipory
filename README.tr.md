@@ -10,7 +10,8 @@ Bir kısayola basıp son kopyaladıklarını açarsın, birini seçersin ve o an
 kopyaladım" diye kaybetmek yok.
 
 <p align="center">
-  <img src="docs/screenshot.png" alt="clipory popup" width="360" />
+  <img src="docs/screenshot-dark.png" alt="clipory popup (dark)" width="360" />
+  <img src="docs/screenshot-light.png" alt="clipory popup (light)" width="360" />
 </p>
 
 ## Özellikler

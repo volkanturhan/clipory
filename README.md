@@ -10,7 +10,8 @@ into whatever app you're working in — no more losing something because you
 copied one more thing.
 
 <p align="center">
-  <img src="docs/screenshot.png" alt="clipory popup" width="360" />
+  <img src="docs/screenshot-dark.png" alt="clipory popup (dark)" width="360" />
+  <img src="docs/screenshot-light.png" alt="clipory popup (light)" width="360" />
 </p>
 
 ## Features
